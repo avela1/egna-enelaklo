@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-canvas font-body text-body text-ink-900 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+  }
+
+  /* Amharic copy falls back to Noto Sans Ethiopic for Ethiopic glyphs. */
+  :lang(am) {
+    font-family: var(--font-ethiopic-family);
+  }
+
+  :focus-visible {
+    @apply outline-none;
+  }
+}

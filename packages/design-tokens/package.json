@@ -1,0 +1,32 @@
+{
+  "name": "@egna-enelaklo/design-tokens",
+  "version": "0.1.0",
+  "private": true,
+  "description": "egna-enelaklo design tokens: single source of truth for colour, type, radius and control sizing",
+  "type": "module",
+  "main": "./dist/tailwind-preset.js",
+  "types": "./dist/tailwind-preset.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/tailwind-preset.d.ts",
+      "default": "./dist/tailwind-preset.js"
+    },
+    "./tailwind-preset": {
+      "types": "./dist/tailwind-preset.d.ts",
+      "default": "./dist/tailwind-preset.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./tokens.json"
+  },
+  "files": [
+    "dist",
+    "tokens.json"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "lint": "echo \"@egna-enelaklo/design-tokens: nothing to lint\"",
+    "typecheck": "echo \"@egna-enelaklo/design-tokens: nothing to typecheck\"",
+    "test": "echo \"@egna-enelaklo/design-tokens: nothing to test\""
+  }
+}

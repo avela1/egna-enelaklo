@@ -1,0 +1,92 @@
+# Local development services for egna-enelaklo.
+#
+#   docker compose -f infra/docker-compose.yml up -d
+#
+# PostgreSQL  database          localhost:5432
+# MinIO       S3 API            localhost:9000   (console on 9001)
+# Mailpit     SMTP / web UI     localhost:1025   (UI on 8025)
+#
+# The MinIO bucket is PRIVATE: objects are only reachable through short lived
+# signed URLs that the API hands out in later phases.
+#
+# MinIO runs behind the "storage" profile so that a registry which cannot
+# reach minio/minio does not block the rest of the stack:
+#
+#   docker compose -f infra/docker-compose.yml --profile storage up -d
+#
+# POSTGRES_HOST_PORT lets you move the database off 5432 when the host already
+# runs a PostgreSQL (set it in the root .env, then use the same port in
+# DATABASE_URL in apps/api/.env).
+
+name: egna-enelaklo
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: egna-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: egna
+      POSTGRES_PASSWORD: egna
+      POSTGRES_DB: egna_dev
+    ports:
+      - '${POSTGRES_HOST_PORT:-5432}:5432'
+    volumes:
+      - egna-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U egna -d egna_dev']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  minio:
+    image: minio/minio:latest
+    container_name: egna-minio
+    restart: unless-stopped
+    profiles: ['storage']
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: egna
+      MINIO_ROOT_PASSWORD: egna-secret
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - egna-minio-data:/data
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  minio-init:
+    image: minio/mc:latest
+    container_name: egna-minio-init
+    profiles: ['storage']
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set egna http://minio:9000 egna egna-secret;
+      mc mb --ignore-existing egna/egna-private;
+      mc anonymous set none egna/egna-private;
+      echo 'Private bucket egna-private is ready.';
+      "
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: egna-mailpit
+    restart: unless-stopped
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+
+volumes:
+  egna-postgres-data:
+  egna-minio-data:

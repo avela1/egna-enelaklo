@@ -1,0 +1,42 @@
+// Prisma schema for egna-enelaklo.
+//
+// Phase 0 ships the foundation only: the datasource, the generator and one
+// baseline table.
+//
+// `audit_log` is part of the permanent rules (every staff/admin write also
+// writes an audit_log row in the same transaction), so the table exists from
+// day one. Every domain table (users, roles, sessions, tasks, quotes,
+// assignments, evidence, ledger) is added in Phase 1 and later.
+//
+// MONEY IS ALWAYS AN INTEGER NUMBER OF SANTIM (1 ETB = 100 santim).
+// Never use Float or Decimal for money.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Immutable trail of every staff and admin write.
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?  @map("actor_id")
+  actorRole  String   @map("actor_role")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  before     Json?
+  after      Json?
+  requestId  String?  @map("request_id")
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([entityType, entityId])
+  @@index([actorId])
+  @@index([createdAt])
+  @@map("audit_log")
+}

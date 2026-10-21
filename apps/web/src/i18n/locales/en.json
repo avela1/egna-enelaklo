@@ -1,0 +1,239 @@
+{
+  "app": {
+    "name": "egna-enelaklo",
+    "nameAm": "እኛ እንላከሎ",
+    "tagline": "Your tasks. Our people. Done.",
+    "portal": "Customer portal"
+  },
+  "common": {
+    "actions": {
+      "add": "Add",
+      "apply": "Apply",
+      "approve": "Approve",
+      "assign": "Assign",
+      "back": "Back",
+      "cancel": "Cancel",
+      "clear": "Clear",
+      "close": "Close",
+      "confirm": "Confirm",
+      "continue": "Continue",
+      "create": "Create",
+      "decline": "Decline",
+      "exportCsv": "Export CSV",
+      "filter": "Filter",
+      "hide": "Hide",
+      "newTask": "New task",
+      "next": "Next",
+      "open": "Open",
+      "remove": "Remove",
+      "reset": "Reset",
+      "resolve": "Resolve",
+      "respond": "Respond",
+      "retry": "Retry",
+      "review": "Review",
+      "save": "Save",
+      "search": "Search",
+      "select": "Select",
+      "show": "Show",
+      "signIn": "Sign in",
+      "signOut": "Sign out",
+      "submit": "Submit",
+      "upload": "Upload",
+      "view": "View"
+    },
+    "states": {
+      "empty": "Nothing here yet",
+      "error": "Something went wrong",
+      "loading": "Loading",
+      "notFound": "Page not found",
+      "placeholder": "This screen is a Phase 0 placeholder. The real workflow arrives in a later phase."
+    },
+    "language": {
+      "am": "አማ",
+      "en": "EN",
+      "label": "Language",
+      "om": "OM"
+    },
+    "user": {
+      "avatar": "User avatar",
+      "guest": "Guest user",
+      "notSignedIn": "Not signed in"
+    },
+    "roles": {
+      "admin": "Admin",
+      "customer": "Customer",
+      "finance": "Finance",
+      "operations": "Operations",
+      "tasker": "Tasker"
+    }
+  },
+  "auth": {
+    "createAccount": "Create a customer account",
+    "email": "Email address",
+    "emailOrPhone": "Email or phone number",
+    "errors": {
+      "email": "Enter a valid email address",
+      "required": "This field is required"
+    },
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Reset password",
+    "fullName": "Full name",
+    "help": "Help",
+    "inviteNote": "Taskers and staff are invited by egna-enelaklo. If you were invited, sign in with the details we sent you.",
+    "newHere": "New here?",
+    "password": "Password",
+    "phone": "Phone number",
+    "privacy": "Privacy",
+    "prohibitedItems": "Prohibited items",
+    "registerTitle": "Create a customer account",
+    "sendResetLink": "Send reset link",
+    "signInSubtitle": "Use the account you created with egna-enelaklo.",
+    "signInTitle": "Sign in",
+    "terms": "Terms"
+  },
+  "services": {
+    "BUY_AND_DELIVER": "Buy and deliver",
+    "PICKUP_AND_DROPOFF": "Pickup and drop-off",
+    "QUEUE_AND_PAPERWORK": "Queue and paperwork"
+  },
+  "status": {
+    "ACCEPTED": "Accepted",
+    "APPROVED": "Approved",
+    "ASSIGNED": "Assigned",
+    "CANCELLED": "Cancelled",
+    "COMPLETED": "Completed",
+    "DELIVERED": "Delivered",
+    "DRAFT": "Draft",
+    "EXCEPTION": "Exception",
+    "IN_PROGRESS": "In progress",
+    "IN_REVIEW": "In review",
+    "NEEDS_INFO": "Needs info",
+    "QUOTED": "Quote ready",
+    "REFUNDED": "Refunded",
+    "SUBMITTED": "Submitted"
+  },
+  "nav": {
+    "customer": {
+      "addresses": "Addresses",
+      "dashboard": "Dashboard",
+      "help": "Help and rules",
+      "myTasks": "My tasks",
+      "newTask": "New task",
+      "notifications": "Notifications",
+      "payments": "Payments",
+      "profile": "Profile"
+    },
+    "staff": {
+      "console": "Staff console",
+      "groups": {
+        "administration": "Administration",
+        "finance": "Finance",
+        "operations": "Operations"
+      },
+      "items": {
+        "assign": "Assign tasker",
+        "audit": "Audit log",
+        "catalog": "Service catalog",
+        "exceptions": "Exceptions",
+        "payments": "Payments and reconciliation",
+        "queue": "Queue",
+        "reports": "Reports",
+        "review": "Review and quote",
+        "roles": "Roles and permissions",
+        "settings": "Settings",
+        "taskers": "Taskers",
+        "templates": "Templates",
+        "users": "Users"
+      }
+    },
+    "tasker": {
+      "activeJob": "Active job",
+      "assignments": "Assignments",
+      "badge": "Tasker",
+      "earnings": "Earnings",
+      "home": "Home",
+      "profile": "My profile"
+    }
+  },
+  "pages": {
+    "customer": {
+      "addresses": "Saved addresses",
+      "dashboard": "My tasks",
+      "help": "Help and rules",
+      "newTask": "New task",
+      "notifications": "Notifications",
+      "payments": "Payments",
+      "profile": "Profile and language"
+    },
+    "notFound": {
+      "description": "The page you are looking for does not exist or has moved.",
+      "title": "Page not found"
+    },
+    "staff": {
+      "assign": "Assign a tasker",
+      "audit": "Audit log",
+      "catalog": "Service catalog",
+      "exceptions": "Exceptions",
+      "payments": "Payments and reconciliation",
+      "queue": "Task queue",
+      "reports": "Reports",
+      "review": "Review and quote",
+      "roles": "Roles and permissions",
+      "settings": "Platform settings",
+      "taskers": "Taskers directory",
+      "templates": "Templates",
+      "users": "Users"
+    },
+    "tasker": {
+      "assignment": "Assignment",
+      "earnings": "Earnings",
+      "home": "Assignments",
+      "job": "Active job",
+      "profile": "My profile"
+    }
+  },
+  "uiKit": {
+    "description": "Every shared component in every state. Colours and sizes come from the design tokens.",
+    "sections": {
+      "button": "Button",
+      "card": "Card",
+      "checkbox": "Checkbox",
+      "chip": "Chip",
+      "emptyState": "Empty state",
+      "formField": "Form field",
+      "input": "Input",
+      "logo": "Logo and wordmark",
+      "modal": "Modal",
+      "radio": "Radio",
+      "select": "Select",
+      "skeleton": "Skeleton",
+      "statusChip": "Status chip",
+      "stepper": "Stepper",
+      "switch": "Switch",
+      "table": "Table",
+      "tabs": "Tabs",
+      "textarea": "Textarea",
+      "toast": "Toast"
+    },
+    "sizes": {
+      "lg": "Large",
+      "md": "Medium",
+      "sm": "Small"
+    },
+    "states": {
+      "default": "Default",
+      "disabled": "Disabled",
+      "invalid": "Invalid",
+      "loading": "Loading",
+      "withError": "With error",
+      "withHint": "With hint"
+    },
+    "title": "UI kit",
+    "variants": {
+      "danger": "Danger",
+      "ghost": "Ghost",
+      "primary": "Primary",
+      "secondary": "Secondary"
+    }
+  }
+}

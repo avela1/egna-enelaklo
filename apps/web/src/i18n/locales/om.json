@@ -1,0 +1,239 @@
+{
+  "app": {
+    "name": "egna-enelaklo",
+    "nameAm": "እኛ እንላከሎ",
+    "tagline": "Wajjiraalee koo. Namma koo. Xumurame.",
+    "portal": "Murti barattoo"
+  },
+  "common": {
+    "actions": {
+      "add": "Dabali",
+      "apply": "Hojiessu",
+      "approve": "Tolchi",
+      "assign": "Qopheeffadhu",
+      "back": "Duubatti",
+      "cancel": "Haqi unsuu",
+      "clear": "Qulqulleessu",
+      "close": "Cufi",
+      "confirm": "Mirkaneessi",
+      "continue": "Itti fufi",
+      "create": "Uumama",
+      "decline": "Didu",
+      "exportCsv": "CSV buufachuu",
+      "filter": "Qalaa",
+      "hide": "Dhoksu",
+      "newTask": "Wajjiraa haaraa",
+      "next": "Itti aanu",
+      "open": "Bani",
+      "remove": "Buqqisi",
+      "reset": "Irra deebi'i",
+      "resolve": "Xalali",
+      "respond": "Deebii kennuu",
+      "retry": "Irra deebi'i malee",
+      "review": "Qaqqabi",
+      "save": "Olkaa'i",
+      "search": "Barbaadi",
+      "select": "Filadhu",
+      "show": "Dhangalaa'i",
+      "signIn": "Seera",
+      "signOut": "Baahi",
+      "submit": "Galmeeessi",
+      "upload": "Olkaa'i",
+      "view": "Ilaali"
+    },
+    "states": {
+      "empty": "Homaa hin jiruu",
+      "error": "Dogoggora dhufuu",
+      "loading": "Fe'aa jira",
+      "notFound": "Fuulaan hin argamne",
+      "placeholder": "Kannan fuulaan Phase 0 placeholder yoo. Real workflow dhaan qabiyyuu."
+    },
+    "language": {
+      "am": "አማ",
+      "en": "EN",
+      "label": "Afaan",
+      "om": "OM"
+    },
+    "user": {
+      "avatar": "Suuraa fayyadamaa",
+      "guest": "Fayyadamuu hin qabne",
+      "notSignedIn": "Seen hin qabne"
+    },
+    "roles": {
+      "admin": "Admin",
+      "customer": "Barattoo",
+      "finance": "Finansii",
+      "operations": "Operashoonii",
+      "tasker": "Hojietsu"
+    }
+  },
+  "auth": {
+    "createAccount": "Murti barattoo uumama",
+    "email": "Aaddee emailii",
+    "emailOrPhone": "Email yookaan bilaan",
+    "errors": {
+      "email": "Aaddee emailii dhugaa dhaqqii galchi",
+      "required": "Kanaan kaa itti fudhatama"
+    },
+    "forgotPassword": "Eegumsaa dhufu?",
+    "forgotPasswordTitle": "Eegumsaa irra deebi'i",
+    "fullName": "Maqaa guutuu",
+    "help": "Gargaarsa",
+    "inviteNote": "Hojietsuun yookaan adminnichi egna-enelaklo biraa daawwatama. Kanaa yoo argame taatee, isaa ergaame biraa seenuu.",
+    "newHere": "Haaraa dha?",
+    "password": "Eegumsaa",
+    "phone": "Bilaan",
+    "privacy": "Sirri",
+    "prohibitedItems": "Waan dhorkamaa",
+    "registerTitle": "Murti barattoo uumama",
+    "sendResetLink": "Link resetii erchiisi",
+    "signInSubtitle": "Murti egna-enelaklo uumame fayyadama.",
+    "signInTitle": "Seera",
+    "terms": "Termii"
+  },
+  "services": {
+    "BUY_AND_DELIVER": "Balaa qabeessi geessuu",
+    "PICKUP_AND_DROPOFF": "Baadhata qabu dabarsuu",
+    "QUEUE_AND_PAPERWORK": "Tarreeffata qabu"
+  },
+  "status": {
+    "ACCEPTED": "Qophaa'e",
+    "APPROVED": "Tolchame",
+    "ASSIGNED": "Qophame",
+    "CANCELLED": "Haqi unsame",
+    "COMPLETED": "Xumurame",
+    "DELIVERED": "Geessame",
+    "DRAFT": "Qa'aa",
+    "EXCEPTION": "Adabbii",
+    "IN_PROGRESS": "Hojiirra jira",
+    "IN_REVIEW": "Qaqqabii",
+    "NEEDS_INFO": "Lakkooti arga",
+    "QUOTED": "Qabeenyi qophoofame",
+    "REFUNDED": "Deebisame",
+    "SUBMITTED": "Ergaame"
+  },
+  "nav": {
+    "customer": {
+      "addresses": "Teessoota",
+      "dashboard": "Dashboordii",
+      "help": "Gargaarsa qaaduu",
+      "myTasks": "Wajjiraalee koo",
+      "newTask": "Wajjiraa haaraa",
+      "notifications": "Akeekkachiisa",
+      "payments": "Kaffaltii",
+      "profile": "Waaqaatokkoo"
+    },
+    "staff": {
+      "console": "Konsolii hojjetuu",
+      "groups": {
+        "administration": "Bulchu",
+        "finance": "Finansii",
+        "operations": "Operashoonii"
+      },
+      "items": {
+        "assign": "Hojietsu qopheeffadhu",
+        "audit": "Galmee qabiyyee",
+        "catalog": "Galmee tajaajilaa",
+        "exceptions": "Adabbii",
+        "payments": "Kaffaltii eeguu",
+        "queue": "Tarreeffama wajjiraa",
+        "reports": "Gabaasamuu",
+        "review": "Qaqqabiidhaa qabeenyi",
+        "roles": "Qabiyyeen eeyyamaa",
+        "settings": "Qindaa'ina",
+        "taskers": "Hojietsu",
+        "templates": "Shaayata",
+        "users": "Fayyadamuu"
+      }
+    },
+    "tasker": {
+      "activeJob": "Hojii yeroo ammaa",
+      "assignments": "Qophaa'uu",
+      "badge": "Hojietsu",
+      "earnings": "Dhaqaqa",
+      "home": "Mana",
+      "profile": "Waaqaatokkoo"
+    }
+  },
+  "pages": {
+    "customer": {
+      "addresses": "Teessoota olkaa'e",
+      "dashboard": "Wajjiraalee koo",
+      "help": "Gargaarsa qaaduu",
+      "newTask": "Wajjiraa haaraa",
+      "notifications": "Akeekkachiisa",
+      "payments": "Kaffaltii",
+      "profile": "Waaqaatokkoo fi afaan"
+    },
+    "notFound": {
+      "description": "Fuulaan barbaade yoo hin argamne.",
+      "title": "Fuulaan hin argamne"
+    },
+    "staff": {
+      "assign": "Hojietsu qopheeffadhu",
+      "audit": "Galmee qabiyyee",
+      "catalog": "Galmee tajaajilaa",
+      "exceptions": "Adabbii",
+      "payments": "Kaffaltii eeguu",
+      "queue": "Tarreeffama wajjiraa",
+      "reports": "Gabaasamuu",
+      "review": "Qaqqabiidhaa qabeenyi",
+      "roles": "Qabiyyeen eeyyamaa",
+      "settings": "Qindaa'ina mootummaa",
+      "taskers": "Galmee hojietsu",
+      "templates": "Shaayata",
+      "users": "Fayyadamuu"
+    },
+    "tasker": {
+      "assignment": "Qophaa'uu",
+      "earnings": "Dhaqaqa",
+      "home": "Qophaa'uu",
+      "job": "Hojii yeroo ammaa",
+      "profile": "Waaqaatokkoo"
+    }
+  },
+  "uiKit": {
+    "description": "Kutaa kuni hunda yeroo hunda. Iffaanniifi hir'aan keenyaa qofa.",
+    "sections": {
+      "button": "Button",
+      "card": "Kaardii",
+      "checkbox": "Kuffaa",
+      "chip": "Chip",
+      "emptyState": "Hoomuu dhii",
+      "formField": "Maqaa karaa",
+      "input": "Galmee",
+      "logo": "Logo fi maqaa",
+      "modal": "Modal",
+      "radio": "Radio",
+      "select": "Filadhu",
+      "skeleton": "Skeleton",
+      "statusChip": "Chip haalaa",
+      "stepper": "Stepper",
+      "switch": "Switch",
+      "table": "Tebela",
+      "tabs": "Taboota",
+      "textarea": "Barreeffama",
+      "toast": "Toast"
+    },
+    "sizes": {
+      "lg": "Muddama",
+      "md": "Walaqaa",
+      "sm": "Xiqqaa"
+    },
+    "states": {
+      "default": "Eyiramuu",
+      "disabled": "Dha'aa",
+      "invalid": "Dogoggora",
+      "loading": "Fe'aa jira",
+      "withError": "Dogoggora waliin",
+      "withHint": "Qaqqabaa waliin"
+    },
+    "title": "Kutaa UI",
+    "variants": {
+      "danger": "Waan khatarraa",
+      "ghost": "Adabbii",
+      "primary": "Awwaale",
+      "secondary": "Lakkawwe"
+    }
+  }
+}

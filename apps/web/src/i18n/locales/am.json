@@ -1,0 +1,239 @@
+{
+  "app": {
+    "name": "egna-enelaklo",
+    "nameAm": "እኛ እንላከሎ",
+    "tagline": "የእርስዎ ተልዕክ። የእኛ ሰዎች። ተጠናቋል።",
+    "portal": "የደንበር መድረክ"
+  },
+  "common": {
+    "actions": {
+      "add": "ጨምር",
+      "apply": "ተግብር",
+      "approve": "አጽድቅ",
+      "assign": "ይመድብ",
+      "back": "ተመለስ",
+      "cancel": "ሰርዝ",
+      "clear": "አጽዳ",
+      "close": "ዝጋ",
+      "confirm": "አረጋግጥ",
+      "continue": "ቀጥል",
+      "create": "ፍጠር",
+      "decline": "ውድቅ አድርግ",
+      "exportCsv": "CSV አውጣ",
+      "filter": "አጣራ",
+      "hide": "ደብቅ",
+      "newTask": "አዲስ ተልዕክ",
+      "next": "ቀጣይ",
+      "open": "ክፈት",
+      "remove": "አስወግድ",
+      "reset": "ዳግም አስጀምር",
+      "resolve": "አስተናግድ",
+      "respond": "መልስ ስጠ",
+      "retry": "እንደገና ሞክር",
+      "review": "ገምግም",
+      "save": "አስቀምጥ",
+      "search": "ፈልግ",
+      "select": "ይምረጡ",
+      "show": "አሳይ",
+      "signIn": "ግባ",
+      "signOut": "ውጣ",
+      "submit": "አስገባ",
+      "upload": "አሳልፍ",
+      "view": "ተመልክት"
+    },
+    "states": {
+      "empty": "እስካሁን ምንም የለም",
+      "error": "ለየው ቀል ተከስቷል",
+      "loading": "በመጫን ላይ",
+      "notFound": "ገጹ አልተገኘም",
+      "placeholder": "ይህ ገጽ የአገልግሎት ደረጃ 0 ቦታ ነው። እውነተኛው የሥራ ፍሰት በኋላ ደረጃ ይሰጣል።"
+    },
+    "language": {
+      "am": "አማ",
+      "en": "EN",
+      "label": "ቋንቋ",
+      "om": "OM"
+    },
+    "user": {
+      "avatar": "የተጠቃሚ አስርት",
+      "guest": "እንግዳ ተጠቃሚ",
+      "notSignedIn": "ግባ አልተከፈለም"
+    },
+    "roles": {
+      "admin": "አስተዳዳሪ",
+      "customer": "ደንበር",
+      "finance": "ፋይናንስ",
+      "operations": "ኦፕሬሽንስ",
+      "tasker": "ታሰራሽ"
+    }
+  },
+  "auth": {
+    "createAccount": "የደንበር መለያ ፍጠር",
+    "email": "የኢሜይል አድራሻ",
+    "emailOrPhone": "ኢሜይል ወይም ስልክ ቁጥር",
+    "errors": {
+      "email": "ትክክል የኢሜይል አድራሻ ያስገቡ",
+      "required": "ይህ መስክ አስፈላጊ ነው"
+    },
+    "forgotPassword": "የይለፍ ቃል የራሱን ተሸምርት?",
+    "forgotPasswordTitle": "የይለፍ ቃል ዳግም አስጀምር",
+    "fullName": "ሙሉ ስም",
+    "help": "እገዛ",
+    "inviteNote": "ታሰራሽና አስተዳዳሪዎች በእኛ እንላከሎ ይጠያቀራሉ። ከተጠራችዎ ተመልክት ያለዎት መረጃ በዚያ ይግቡ።",
+    "newHere": "አዲስ ነዎት?",
+    "password": "የይለፍ ቃል",
+    "phone": "የስልክ ቁጥር",
+    "privacy": "ግል ጥበቃ",
+    "prohibitedItems": "የተከለከሉ ምርቶች",
+    "registerTitle": "የደንበር መለያ ፍጠር",
+    "sendResetLink": "የዳግም ማስጀመሪያ ሊንክ ላክ",
+    "signInSubtitle": "በእኛ እንላከሎ የፍጠሩትን መለያ ይጠቀሙ።",
+    "signInTitle": "ግባ",
+    "terms": "የድንጋት ሁኔታ"
+  },
+  "services": {
+    "BUY_AND_DELIVER": "ገዝብ ገዝኝ በመግዢት አጋርጣሽ",
+    "PICKUP_AND_DROPOFF": "ንግድ አንቀሳቅስ አስረክት",
+    "QUEUE_AND_PAPERWORK": "በሰልፍ መስፈርት"
+  },
+  "status": {
+    "ACCEPTED": "ተቀብሏል",
+    "APPROVED": "ጸድቋል",
+    "ASSIGNED": "ተመድቧል",
+    "CANCELLED": "ተሰርዟል",
+    "COMPLETED": "ተጠናቋል",
+    "DELIVERED": "ተደርሷል",
+    "DRAFT": "ረቂቅ",
+    "EXCEPTION": "ልዩ አያያዝ",
+    "IN_PROGRESS": "በሂደት ላይ",
+    "IN_REVIEW": "በግምገማ ላይ",
+    "NEEDS_INFO": "መረጃ ያስፈልጋል",
+    "QUOTED": "ዋጋ ተዘጋጅቷል",
+    "REFUNDED": "ተመልሷል",
+    "SUBMITTED": "ተልኳል"
+  },
+  "nav": {
+    "customer": {
+      "addresses": "አድራሻዎች",
+      "dashboard": "ዳሽቦርድ",
+      "help": "እገዛ እና ደንቦች",
+      "myTasks": "የእኔ ተልዕክዎች",
+      "newTask": "አዲስ ተልዕክ",
+      "notifications": "ማሳወቂያዎች",
+      "payments": "ክፍያዎች",
+      "profile": "መገለጫ"
+    },
+    "staff": {
+      "console": "የአስተዳዳሪ መቅጃ",
+      "groups": {
+        "administration": "አስተዳደር",
+        "finance": "ፋይናንስ",
+        "operations": "ኦፕሬሽንስ"
+      },
+      "items": {
+        "assign": "ታሰራሽ ይመድብ",
+        "audit": "የምዝገባ መዝገብ",
+        "catalog": "የአገልግሎት ካታሎግ",
+        "exceptions": "ልዩ አያያዞች",
+        "payments": "ክፍያና ማስታረክ",
+        "queue": "ተልዕክ ተንጋል",
+        "reports": "መዝገቦች",
+        "review": "ግምገማ እና ዋጋ",
+        "roles": "መድልና ፈቃድ",
+        "settings": "ቅንብሮች",
+        "taskers": "ታሰራሽን",
+        "templates": "ቅርጾች",
+        "users": "ተጠቃሚዎች"
+      }
+    },
+    "tasker": {
+      "activeJob": "እየሆነ የሥራ ዕድል",
+      "assignments": "ምደቦች",
+      "badge": "ታሰራሽ",
+      "earnings": "ገቢ",
+      "home": "መነሻ",
+      "profile": "የእኔ መገለጫ"
+    }
+  },
+  "pages": {
+    "customer": {
+      "addresses": "የተቀመጡ አድራሻዎች",
+      "dashboard": "የእኔ ተልዕክዎች",
+      "help": "እገዛ እና ደንቦች",
+      "newTask": "አዲስ ተልዕክ",
+      "notifications": "ማሳወቂያዎች",
+      "payments": "ክፍያዎች",
+      "profile": "መገለጫ እና ቋንቋ"
+    },
+    "notFound": {
+      "description": "የፈለግዎት ገጹ አይገኝም ወይም ተዛውሯል።",
+      "title": "ገጹ አልተገኘም"
+    },
+    "staff": {
+      "assign": "ታሰራሽ መመድብ",
+      "audit": "የምዝገባ መዝገብ",
+      "catalog": "የአገልግሎት ካታሎግ",
+      "exceptions": "ልዩ አያያዞች",
+      "payments": "ክፍያና ማስታረክ",
+      "queue": "የተልዕክ ተንጋል",
+      "reports": "መዝገቦች",
+      "review": "ግምገማ እና ዋጋ",
+      "roles": "መድልና ፈቃድ",
+      "settings": "የመድረክ ቅንብሮች",
+      "taskers": "የታሰራሽን መድረክ",
+      "templates": "ቅርጾች",
+      "users": "ተጠቃሚዎች"
+    },
+    "tasker": {
+      "assignment": "ምደብ",
+      "earnings": "ገቢ",
+      "home": "ምደቦች",
+      "job": "እየሆነ የሥራ ዕድል",
+      "profile": "የእኔ መገለጫ"
+    }
+  },
+  "uiKit": {
+    "description": "የሚገኙ ሁሉም አካላት በሁሉም ሁኔታ። ቀለሞችና መጠን ከንድፍ ምልክቶች ይገኛሉ።",
+    "sections": {
+      "button": "አቁም",
+      "card": "ካርድ",
+      "checkbox": "አረጋግጥ ሳጥን",
+      "chip": "መለያ",
+      "emptyState": "ባዶ ሁኔታ",
+      "formField": "የቅጽ መስክ",
+      "input": "ግብዓት",
+      "logo": "ሎጎ እና የአስምላር ጽሑፍ",
+      "modal": "መስኮያ",
+      "radio": "የአማራ አሞሌ",
+      "select": "ዝርዝር",
+      "skeleton": "ክፍተት",
+      "statusChip": "የሁኔታ አሞሌ",
+      "stepper": "የደረጃ አሞሌ",
+      "switch": "ማጫኪያ",
+      "table": "ጠረጴዛ",
+      "tabs": "ትሮች",
+      "textarea": "የጽሑፍ ማስገቢያ",
+      "toast": "መልእክት"
+    },
+    "sizes": {
+      "lg": "ትልቅ",
+      "md": "መካከለኛ",
+      "sm": "ትንሽ"
+    },
+    "states": {
+      "default": "መሸረጫ",
+      "disabled": "ዝግው",
+      "invalid": "ትክክል ያልሆነ",
+      "loading": "በመጫን ላይ",
+      "withError": "ከስህተት ጋር",
+      "withHint": "ከምልክት ጋር"
+    },
+    "title": "የተጠቃሚ አካላት",
+    "variants": {
+      "danger": "አደገኛ",
+      "ghost": "ግልጽ",
+      "primary": "ዋና",
+      "secondary": "ሁለተኛ"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "egna-enelaklo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "egna-enelaklo (እኛ እንላከሎ) — Ethiopian task marketplace for Addis Ababa",
+  "license": "UNLICENSED",
+  "packageManager": "npm@10.9.2",
+  "engines": {
+    "node": ">=22.0.0 <23",
+    "npm": ">=10.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "tokens:build": "npm run build --workspace @egna-enelaklo/design-tokens",
+    "infra:up": "docker compose --env-file .env -f infra/docker-compose.yml up -d",
+    "infra:down": "docker compose --env-file .env -f infra/docker-compose.yml down",
+    "infra:ps": "docker compose --env-file .env -f infra/docker-compose.yml ps",
+    "infra:logs": "docker compose --env-file .env -f infra/docker-compose.yml logs -f",
+    "infra:storage": "docker compose --env-file .env -f infra/docker-compose.yml --profile storage up -d",
+    "db:migrate": "npm run prisma:migrate --workspace @egna-enelaklo/api",
+    "db:deploy": "npm run prisma:deploy --workspace @egna-enelaklo/api",
+    "db:seed": "npm run prisma:seed --workspace @egna-enelaklo/api",
+    "db:studio": "npm run prisma:studio --workspace @egna-enelaklo/api",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "turbo": "^2.1.3",
+    "typescript": "^5.6.3"
+  }
+}

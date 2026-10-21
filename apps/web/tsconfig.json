@@ -1,0 +1,13 @@
+{
+  "extends": "@egna-enelaklo/config/tsconfig/react.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node", "vite/client", "vitest/globals"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@egna-enelaklo/shared": ["../../packages/shared/src/index.ts"]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}
