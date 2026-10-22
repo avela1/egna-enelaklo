@@ -469,9 +469,7 @@
     "tooLong": "ይህ እሴት በጣም ተራያዊ ነው",
     "tooShort": "ይህ እሴት በጣም አጭር ነው",
     "tooSmall": "ይህ እሴት በጣም ትንሽ ነው",
-    "unknownField": "ይህ መስክ የጥያቄው አካል አይደለም",
-    "fileNotFound": "ይህ ፋይል ከዚህ በኋላ የለም። እባክዎ እንደገና ይምረጡ።",
-    "fileNotVerified": "ይህ ፋይል አልተቀበለም። እባክዎ PDF፣ JPG፣ PNG ወይም HEIC ፋይል በ5 ሜባ ቢያንስ ይምረጡ።"
+    "unknownField": "ይህ መስክ የጥያቄው አካል አይደለም"
   },
   "addresses": {
     "add": "አድራሻ ጨምር",
@@ -513,9 +511,7 @@
       "team": "የእኛ እንላከሎ ቡድን",
       "timeline": "እድገት",
       "title": "ጥያቄዎ",
-      "you": "እርስዎ",
-      "attachmentPreview": "የተያያዘው ፋይል",
-      "noAttachments": "ተያያይ ፋይል የለም"
+      "you": "እርስዎ"
     },
     "form": {
       "addAddress": "አድራሻ ጨምር",

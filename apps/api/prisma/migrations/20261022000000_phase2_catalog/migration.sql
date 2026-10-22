@@ -114,7 +114,6 @@ CREATE TABLE "attachments" (
     "file_name" TEXT NOT NULL,
     "content_type" TEXT NOT NULL,
     "size_bytes" INTEGER NOT NULL,
-    "verified_at" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "attachments_pkey" PRIMARY KEY ("id")

@@ -2,7 +2,6 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import type { Prisma } from '@prisma/client';
 import {
   buildZodSchema,
-  allFields,
   extractMappedValues,
   summarizePayload,
   TaskStatus,
@@ -165,16 +164,6 @@ export class TasksService {
     for (const addressId of [mapped.pickupAddressId, mapped.deliveryAddressId]) {
       if (!addressId) continue;
       await this.addresses.findOwned(customerId, addressId);
-    }
-
-    // A file field has to point to a file of the customer that was checked.
-    const fileIssues = await this.checkFileAnswers(customerId, definition, answers);
-    if (fileIssues.length > 0) {
-      throw new BadRequestException({
-        code: 'VALIDATION_FAILED',
-        message: 'Some answers are missing or not valid',
-        details: fileIssues,
-      });
     }
 
     const matches = await this.prohibited.check(answers);
@@ -341,49 +330,6 @@ export class TasksService {
         createdAt: entry.createdAt.toISOString(),
       })),
     };
-  }
-
-  /**
-   * Checks the file answers: a file has to belong to the customer and it has
-   * to be verified, so a task can never point at a file of somebody else or at
-   * a file that was never checked.
-   */
-  private async checkFileAnswers(
-    customerId: string,
-    definition: TemplateDefinition,
-    answers: TaskPayload,
-  ): Promise<{ message: string; path: string }[]> {
-    const issues: { message: string; path: string }[] = [];
-    const fileFields = allFields(definition).filter((field) => field.type === 'file');
-
-    for (const field of fileFields) {
-      const value = answers[field.key];
-      if (value === undefined || value === null || value === '') continue;
-
-      const ids = Array.isArray(value) ? value : [value];
-
-      for (const id of ids) {
-        if (typeof id !== 'string') {
-          issues.push({ path: field.key, message: 'validation.invalid' });
-          continue;
-        }
-
-        const attachment = await this.prisma.attachment.findFirst({
-          where: { id, ownerId: customerId },
-        });
-
-        if (!attachment) {
-          issues.push({ path: field.key, message: 'validation.fileNotFound' });
-          continue;
-        }
-
-        if (!attachment.verifiedAt) {
-          issues.push({ path: field.key, message: 'validation.fileNotVerified' });
-        }
-      }
-    }
-
-    return issues;
   }
 
   /** The task of this customer, or a 404 when it is not theirs. */

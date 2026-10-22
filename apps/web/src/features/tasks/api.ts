@@ -190,11 +190,7 @@ export interface UploadResult {
   uploadUrl: string;
 }
 
-/**
- * Uploads a file to the private bucket with a presigned URL and then asks the
- * server to check it. A file that does not follow the rules is removed by the
- * server and the upload fails.
- */
+/** Uploads a file to the private bucket with a presigned URL. */
 export async function uploadFile(input: {
   contentType: string;
   file: File;
@@ -222,13 +218,5 @@ export async function uploadFile(input: {
     throw new Error('The file could not be uploaded');
   }
 
-  // The server checks the file that really arrived in the bucket.
-  await apiRequest(`/attachments/${sign.attachmentId}/confirm`, { method: 'POST' });
-
   return sign;
-}
-
-/** Removes a file that the customer does not want any more. */
-export async function removeAttachment(attachmentId: string): Promise<void> {
-  await apiRequest(`/attachments/${attachmentId}`, { method: 'DELETE' });
 }

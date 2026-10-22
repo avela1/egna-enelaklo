@@ -469,9 +469,7 @@
     "tooLong": "Kanni qabeessi dhedheegamaa",
     "tooShort": "Kanni qabeessi gaggabaa",
     "tooSmall": "Kanni qabeessi hanqaaqu",
-    "unknownField": "Kanni barreeffamaan kanni wajjiraa keessatti hin jiru",
-    "fileNotFound": "Kanni faayilii hammaa hin jirre. Miggaa fudhii.",
-    "fileNotVerified": "Kanni faayilii hin qophoofame. PDF, JPG, PNG yookaan HEIC faayilii 5 MB gabaa keessatti filadhu."
+    "unknownField": "Kanni barreeffamaan kanni wajjiraa keessatti hin jiru"
   },
   "addresses": {
     "add": "Teessoo dabali",
@@ -513,9 +511,7 @@
       "team": "Kooti egna-enelaklo",
       "timeline": "Tajaajila",
       "title": "Wajjiraa kooti",
-      "you": "Ati",
-      "attachmentPreview": "Faayilii daballee",
-      "noAttachments": "Faayilii dabalee hin qabne"
+      "you": "Ati"
     },
     "form": {
       "addAddress": "Teessoo haaraa dabali",

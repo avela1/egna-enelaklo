@@ -469,9 +469,7 @@
     "tooLong": "This value is too long",
     "tooShort": "This value is too short",
     "tooSmall": "This value is too small",
-    "unknownField": "This field is not part of the request",
-    "fileNotFound": "This file does not exist any more. Please choose it again.",
-    "fileNotVerified": "This file was not accepted. Please choose a PDF, JPG, PNG or HEIC file of at most 5 MB."
+    "unknownField": "This field is not part of the request"
   },
   "addresses": {
     "add": "Add address",
@@ -513,9 +511,7 @@
       "team": "egna-enelaklo team",
       "timeline": "Progress",
       "title": "Your request",
-      "you": "You",
-      "attachmentPreview": "The attached file",
-      "noAttachments": "No attachments"
+      "you": "You"
     },
     "form": {
       "addAddress": "Add a new address",

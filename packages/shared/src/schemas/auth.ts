@@ -34,9 +34,6 @@ export const VALIDATION_MESSAGES = {
   'validation.deadlineInFuture': 'The date has to be in the future',
   'validation.minRows': 'Add at least one row',
   'validation.maxRows': 'Too many rows',
-  'validation.fileNotFound': 'This file does not exist any more. Please choose it again.',
-  'validation.fileNotVerified':
-    'This file was not accepted. Please choose a PDF, JPG, PNG or HEIC file of at most 5 MB.',
 } as const;
 
 export type ValidationMessageKey = keyof typeof VALIDATION_MESSAGES;

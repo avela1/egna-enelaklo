@@ -16,7 +16,6 @@ import {
   Textarea,
   useToast,
 } from '@/components/ui';
-import { apiRequest } from '@/lib/api';
 import { useCancelTask, useTask } from '../api';
 
 export function TaskDetailPage() {
@@ -27,16 +26,6 @@ export function TaskDetailPage() {
   const cancel = useCancelTask();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [reason, setReason] = useState('');
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  const openAttachment = async (attachmentId: string) => {
-    try {
-      const result = await apiRequest<{ url: string }>(`/attachments/${attachmentId}/url`);
-      setPreviewUrl(result.url);
-    } catch {
-      toast({ title: t('common.states.error'), variant: 'error' });
-    }
-  };
 
   if (task.isLoading) {
     return (
@@ -99,108 +88,59 @@ export function TaskDetailPage() {
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
-        <div className="flex flex-col gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('task.review.attachments')}</CardTitle>
-            </CardHeader>
-            <CardBody className="flex flex-col gap-3">
-              {task.data.attachments.length === 0 ? (
-                <p className="text-sm text-ink-500">{t('task.detail.noAttachments')}</p>
-              ) : (
-                task.data.attachments.map((attachment) => (
-                  <button
-                    key={attachment.id}
-                    type="button"
-                    onClick={() => void openAttachment(attachment.id)}
-                    className="flex items-center gap-3 rounded-panel border border-line bg-surface px-4 py-3 text-left transition-colors hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
-                  >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-panel bg-brand-50 text-brand-500">
-                      <svg aria-hidden="true" className="h-5 w-5" fill="none" viewBox="0 0 24 24">
-                        <path
-                          d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                        />
-                        <polyline
-                          points="14 2 14 8 20 8"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                        />
-                      </svg>
-                    </span>
-                    <span className="flex flex-col">
-                      <span className="text-[15px] font-semibold text-ink-900">
-                        {attachment.fileName}
-                      </span>
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('task.detail.request')}</CardTitle>
+          </CardHeader>
+          <CardBody className="flex flex-col gap-4">
+            {task.data.definition.sections.map((section) => (
+              <div key={section.key} className="flex flex-col gap-2">
+                <p className="text-sm font-bold text-ink-700">
+                  {localize(section.title, i18n.language)}
+                </p>
+                {section.fields.map((field) => {
+                  const value = payload[field.key];
+                  if (value === undefined || value === null || value === '') return null;
+
+                  return (
+                    <div key={field.key} className="flex flex-col gap-0.5">
                       <span className="text-xs text-ink-500">
-                        {attachment.contentType} · {Math.ceil(attachment.sizeBytes / 1024)} KB
+                        {localize(field.label, i18n.language)}
                       </span>
-                    </span>
-                  </button>
-                ))
-              )}
-            </CardBody>
-          </Card>
+                      <span className="text-[15px] text-ink-900">
+                        {Array.isArray(value)
+                          ? value
+                              .map((row) =>
+                                typeof row === 'object' && row !== null
+                                  ? Object.values(row as Record<string, unknown>)
+                                      .filter(
+                                        (entry) =>
+                                          entry !== undefined && entry !== null && entry !== '',
+                                      )
+                                      .join(' · ')
+                                  : String(row),
+                              )
+                              .join(' / ')
+                          : typeof value === 'boolean'
+                            ? t('common.actions.yes')
+                            : String(value)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('task.detail.request')}</CardTitle>
-            </CardHeader>
-            <CardBody className="flex flex-col gap-4">
-              {task.data.definition.sections.map((section) => (
-                <div key={section.key} className="flex flex-col gap-2">
-                  <p className="text-sm font-bold text-ink-700">
-                    {localize(section.title, i18n.language)}
-                  </p>
-                  {section.fields.map((field) => {
-                    const value = payload[field.key];
-                    if (value === undefined || value === null || value === '') return null;
-
-                    return (
-                      <div key={field.key} className="flex flex-col gap-0.5">
-                        <span className="text-xs text-ink-500">
-                          {localize(field.label, i18n.language)}
-                        </span>
-                        <span className="text-[15px] text-ink-900">
-                          {Array.isArray(value)
-                            ? value
-                                .map((row) =>
-                                  typeof row === 'object' && row !== null
-                                    ? Object.values(row as Record<string, unknown>)
-                                        .filter(
-                                          (entry) =>
-                                            entry !== undefined && entry !== null && entry !== '',
-                                        )
-                                        .join(' · ')
-                                    : String(row),
-                                )
-                                .join(' / ')
-                            : typeof value === 'boolean'
-                              ? t('common.actions.yes')
-                              : String(value)}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-
-              {task.data.budgetCapSantim ? (
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xs text-ink-500">{t('task.form.purchaseBudget')}</span>
-                  <span className="text-[15px] font-semibold text-ink-900">
-                    ETB {(task.data.budgetCapSantim / 100).toLocaleString()}
-                  </span>
-                </div>
-              ) : null}
-            </CardBody>
-          </Card>
-        </div>
+            {task.data.budgetCapSantim ? (
+              <div className="flex flex-col gap-0.5">
+                <span className="text-xs text-ink-500">{t('task.form.purchaseBudget')}</span>
+                <span className="text-[15px] font-semibold text-ink-900">
+                  ETB {(task.data.budgetCapSantim / 100).toLocaleString()}
+                </span>
+              </div>
+            ) : null}
+          </CardBody>
+        </Card>
 
         <Card>
           <CardHeader>
@@ -243,25 +183,6 @@ export function TaskDetailPage() {
           </CardBody>
         </Card>
       </div>
-
-      {previewUrl ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/60 p-4"
-        >
-          <div className="flex flex-col gap-3">
-            <img
-              src={previewUrl}
-              alt={t('task.detail.attachmentPreview')}
-              className="max-h-[80vh] max-w-[90vw] rounded-card"
-            />
-            <Button onClick={() => setPreviewUrl(null)} variant="secondary">
-              {t('common.actions.close')}
-            </Button>
-          </div>
-        </div>
-      ) : null}
 
       <Modal
         open={confirmOpen}
