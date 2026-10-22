@@ -10,4 +10,6 @@ module.exports = {
   coverageReporters: ['text', 'lcov'],
   testEnvironment: 'node',
   testTimeout: 30000,
+  // The suite talks to one database, so the files run one after the other.
+  maxWorkers: 1,
 };

@@ -1,3 +1,7 @@
+export { Alert } from './Alert';
+export type { AlertProps, AlertTone } from './Alert';
+export { UserStatusChip } from './UserStatusChip';
+export type { UserStatusChipProps } from './UserStatusChip';
 export { Button, buttonVariants } from './Button';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './Button';
 export {
@@ -24,6 +28,8 @@ export { Modal } from './Modal';
 export type { ModalProps } from './Modal';
 export { Radio, RadioGroup } from './Radio';
 export type { RadioGroupProps, RadioProps } from './Radio';
+export { RoleChip } from './RoleChip';
+export type { RoleChipProps, RoleName } from './RoleChip';
 export { Select } from './Select';
 export type { SelectOption, SelectProps } from './Select';
 export { Skeleton } from './Skeleton';

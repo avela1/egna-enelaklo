@@ -4,7 +4,7 @@ import { Brand } from '@/components/brand';
 import { cn } from '@/lib/cn';
 import { usePageTitleKey } from '../hooks/usePageTitleKey';
 import { LanguageSwitch } from './LanguageSwitch';
-import { UserBlock } from './UserBlock';
+import { UserMenu } from './UserMenu';
 
 const taskerNav = [
   { end: true, labelKey: 'nav.tasker.assignments', to: '/tasker' },
@@ -62,7 +62,7 @@ export function TaskerLayout() {
 
           <div className="ml-auto flex items-center gap-3">
             <LanguageSwitch />
-            <UserBlock className="hidden sm:flex" tone="light" />
+            <UserMenu className="hidden sm:flex" profileTo="/tasker/profile" />
           </div>
         </div>
       </header>

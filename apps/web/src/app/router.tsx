@@ -3,40 +3,48 @@ import { AuthLayout } from './layouts/AuthLayout';
 import { CustomerLayout } from './layouts/CustomerLayout';
 import { StaffLayout } from './layouts/StaffLayout';
 import { TaskerLayout } from './layouts/TaskerLayout';
-import { ForgotPasswordPage } from '@/features/auth/ForgotPasswordPage';
-import { RegisterPage } from '@/features/auth/RegisterPage';
-import { SignInPage } from '@/features/auth/SignInPage';
+import { RequirePermission, RequirePortal } from '@/features/auth/guards';
+import { ForgotPasswordPage } from '@/features/auth/pages/ForgotPasswordPage';
+import { PasswordFormPage } from '@/features/auth/pages/PasswordFormPage';
+import { RegisterPage } from '@/features/auth/pages/RegisterPage';
+import { SignInPage } from '@/features/auth/pages/SignInPage';
+import { VerifyEmailPage } from '@/features/auth/pages/VerifyEmailPage';
 import {
-  CustomerAddressesPage,
-  CustomerDashboardPage,
   CustomerHelpPage,
   CustomerNewTaskPage,
   CustomerNotificationsPage,
   CustomerPaymentsPage,
   CustomerProfilePage,
 } from '@/features/customer/pages';
+import { ErrorPage } from '@/features/errors/ErrorPage';
 import { NotFoundPage } from '@/features/not-found/NotFoundPage';
+import { ProfilePage } from '@/features/profile/ProfilePage';
+import { StaffAuditPage } from '@/features/staff/pages/StaffAuditPage';
+import { StaffRolesPage } from '@/features/staff/pages/StaffRolesPage';
+import { StaffUsersPage } from '@/features/staff/pages/StaffUsersPage';
+import { AddressesPage } from '@/features/addresses/AddressesPage';
+import { ChooseServicePage } from '@/features/tasks/pages/ChooseServicePage';
+import { TaskDetailPage } from '@/features/tasks/pages/TaskDetailPage';
+import { TaskFormPage } from '@/features/tasks/pages/TaskFormPage';
+import { TaskListPage } from '@/features/tasks/pages/TaskListPage';
+import { TaskReviewPage } from '@/features/tasks/pages/TaskReviewPage';
+import { StaffCatalogPage } from '@/features/staff/pages/StaffCatalogPage';
+import { StaffQueuePage } from '@/features/staff/pages/StaffQueuePage';
+import { TemplateEditorPage } from '@/features/staff/pages/TemplateEditorPage';
 import {
   StaffAssignPage,
-  StaffAuditPage,
-  StaffCatalogPage,
   StaffExceptionsPage,
   StaffPaymentsPage,
-  StaffQueuePage,
   StaffReportsPage,
   StaffReviewPage,
-  StaffRolesPage,
   StaffSettingsPage,
   StaffTaskersPage,
-  StaffTemplatesPage,
-  StaffUsersPage,
 } from '@/features/staff/pages';
 import {
   TaskerAssignmentPage,
   TaskerEarningsPage,
   TaskerHomePage,
   TaskerJobPage,
-  TaskerProfilePage,
 } from '@/features/tasker/pages';
 import { UiKitPage } from '@/features/ui-kit/UiKitPage';
 import type { RouteHandle } from './types';
@@ -65,6 +73,21 @@ export const routes: RouteObject[] = [
         element: <ForgotPasswordPage />,
         handle: { titleKey: 'auth.forgotPasswordTitle' } satisfies RouteHandle,
       },
+      {
+        path: 'reset-password',
+        element: <PasswordFormPage mode="reset" />,
+        handle: { titleKey: 'auth.resetTitle' } satisfies RouteHandle,
+      },
+      {
+        path: 'set-password',
+        element: <PasswordFormPage mode="invite" />,
+        handle: { titleKey: 'auth.inviteTitle' } satisfies RouteHandle,
+      },
+      {
+        path: 'verify-email',
+        element: <VerifyEmailPage />,
+        handle: { titleKey: 'auth.verifyEmailTitle' } satisfies RouteHandle,
+      },
     ],
   },
   {
@@ -74,12 +97,41 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/app',
-    element: <CustomerLayout />,
+    element: (
+      <RequirePortal portal="app">
+        <CustomerLayout />
+      </RequirePortal>
+    ),
     children: [
       {
         index: true,
-        element: <CustomerDashboardPage />,
+        element: <TaskListPage />,
         handle: { titleKey: 'pages.customer.dashboard' } satisfies RouteHandle,
+      },
+      {
+        path: 'new',
+        element: <ChooseServicePage />,
+        handle: { titleKey: 'task.choose.title' } satisfies RouteHandle,
+      },
+      {
+        path: 'tasks/:id',
+        element: <TaskDetailPage />,
+        handle: { titleKey: 'task.detail.title' } satisfies RouteHandle,
+      },
+      {
+        path: 'tasks/:id/edit',
+        element: <TaskFormPage />,
+        handle: { titleKey: 'task.form.title' } satisfies RouteHandle,
+      },
+      {
+        path: 'tasks/:id/review',
+        element: <TaskReviewPage />,
+        handle: { titleKey: 'task.review.title' } satisfies RouteHandle,
+      },
+      {
+        path: 'addresses',
+        element: <AddressesPage />,
+        handle: { titleKey: 'pages.customer.addresses' } satisfies RouteHandle,
       },
       {
         path: 'new-task',
@@ -87,9 +139,9 @@ export const routes: RouteObject[] = [
         handle: { titleKey: 'pages.customer.newTask' } satisfies RouteHandle,
       },
       {
-        path: 'addresses',
-        element: <CustomerAddressesPage />,
-        handle: { titleKey: 'pages.customer.addresses' } satisfies RouteHandle,
+        path: 'queue',
+        element: <StaffQueuePage />,
+        handle: { titleKey: 'pages.staff.queue' } satisfies RouteHandle,
       },
       {
         path: 'payments',
@@ -115,7 +167,11 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/tasker',
-    element: <TaskerLayout />,
+    element: (
+      <RequirePortal portal="tasker">
+        <TaskerLayout />
+      </RequirePortal>
+    ),
     children: [
       {
         index: true,
@@ -139,14 +195,18 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'profile',
-        element: <TaskerProfilePage />,
+        element: <ProfilePage />,
         handle: { titleKey: 'pages.tasker.profile' } satisfies RouteHandle,
       },
     ],
   },
   {
     path: '/staff',
-    element: <StaffLayout />,
+    element: (
+      <RequirePortal portal="staff">
+        <StaffLayout />
+      </RequirePortal>
+    ),
     children: [
       {
         index: true,
@@ -154,7 +214,11 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'queue',
-        element: <StaffQueuePage />,
+        element: (
+          <RequirePermission permission="tasks.view">
+            <StaffQueuePage />
+          </RequirePermission>
+        ),
         handle: { titleKey: 'pages.staff.queue' } satisfies RouteHandle,
       },
       {
@@ -189,27 +253,47 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'catalog',
-        element: <StaffCatalogPage />,
+        element: (
+          <RequirePermission permission="catalog.edit">
+            <StaffCatalogPage />
+          </RequirePermission>
+        ),
         handle: { titleKey: 'pages.staff.catalog' } satisfies RouteHandle,
       },
       {
-        path: 'templates',
-        element: <StaffTemplatesPage />,
+        path: 'templates/:serviceId',
+        element: (
+          <RequirePermission permission="catalog.edit">
+            <TemplateEditorPage />
+          </RequirePermission>
+        ),
         handle: { titleKey: 'pages.staff.templates' } satisfies RouteHandle,
       },
       {
         path: 'users',
-        element: <StaffUsersPage />,
+        element: (
+          <RequirePermission permission="users.manage">
+            <StaffUsersPage />
+          </RequirePermission>
+        ),
         handle: { titleKey: 'pages.staff.users' } satisfies RouteHandle,
       },
       {
         path: 'roles',
-        element: <StaffRolesPage />,
+        element: (
+          <RequirePermission permission="roles.manage">
+            <StaffRolesPage />
+          </RequirePermission>
+        ),
         handle: { titleKey: 'pages.staff.roles' } satisfies RouteHandle,
       },
       {
         path: 'audit',
-        element: <StaffAuditPage />,
+        element: (
+          <RequirePermission permission="audit.view">
+            <StaffAuditPage />
+          </RequirePermission>
+        ),
         handle: { titleKey: 'pages.staff.audit' } satisfies RouteHandle,
       },
       {
@@ -217,7 +301,16 @@ export const routes: RouteObject[] = [
         element: <StaffSettingsPage />,
         handle: { titleKey: 'pages.staff.settings' } satisfies RouteHandle,
       },
+      {
+        path: 'profile',
+        element: <ProfilePage />,
+        handle: { titleKey: 'pages.staff.profile' } satisfies RouteHandle,
+      },
     ],
+  },
+  {
+    path: '/error',
+    element: <ErrorPage />,
   },
   {
     path: '*',

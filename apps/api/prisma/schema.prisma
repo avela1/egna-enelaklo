@@ -1,15 +1,16 @@
 // Prisma schema for egna-enelaklo.
 //
-// Phase 0 ships the foundation only: the datasource, the generator and one
-// baseline table.
+// Phase 1 added the accounts, the roles, the permissions, the sessions, the
+// email tokens and the append-only audit log.
 //
-// `audit_log` is part of the permanent rules (every staff/admin write also
-// writes an audit_log row in the same transaction), so the table exists from
-// day one. Every domain table (users, roles, sessions, tasks, quotes,
-// assignments, evidence, ledger) is added in Phase 1 and later.
+// Phase 2 adds the service catalogue, the versioned request templates, the
+// saved addresses, the tasks and the attachments.
 //
 // MONEY IS ALWAYS AN INTEGER NUMBER OF SANTIM (1 ETB = 100 santim).
 // Never use Float or Decimal for money.
+//
+// The audit log is append-only: a database trigger blocks UPDATE and DELETE,
+// so the application cannot rewrite history even by accident.
 
 generator client {
   provider = "prisma-client-js"
@@ -20,23 +21,349 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserStatus {
+  ACTIVE
+  DISABLED
+  INVITED
+}
+
+enum RoleName {
+  CUSTOMER
+  TASKER
+  OPERATIONS
+  FINANCE
+  ADMIN
+}
+
+enum EmailTokenType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+  INVITE
+}
+
+enum ServiceStatus {
+  LIVE
+  DRAFT
+  DISABLED
+}
+
+enum TemplateStatus {
+  DRAFT
+  LIVE
+  ARCHIVED
+}
+
+enum SubCity {
+  ADDIS_KETEMA
+  AKAKY_KALITI
+  ARADA
+  BOLE
+  GULLELE
+  KIRKOS
+  KOLFE_KERANIO
+  LEMI_KURA
+  LIDETA
+  NIFAS_SILK_LAFTO
+  YEKA
+}
+
+enum TaskStatus {
+  DRAFT
+  SUBMITTED
+  IN_REVIEW
+  NEEDS_INFO
+  QUOTED
+  APPROVED
+  ASSIGNED
+  ACCEPTED
+  IN_PROGRESS
+  DELIVERED
+  COMPLETED
+  EXCEPTION
+  CANCELLED
+  REFUNDED
+}
+
+enum AttachmentKind {
+  AUTHORIZATION_LETTER
+  REFERENCE_PHOTO
+  OTHER
+}
+
+/// A person who can sign in.
+model User {
+  id               String     @id @default(uuid()) @db.Uuid
+  email            String     @unique
+  phone            String?
+  name             String
+  passwordHash     String     @map("password_hash")
+  locale           String     @default("en")
+  status           UserStatus @default(ACTIVE)
+  emailVerifiedAt  DateTime?  @map("email_verified_at")
+  failedLoginCount Int        @default(0) @map("failed_login_count")
+  lockedUntil      DateTime?  @map("locked_until")
+  lastLoginAt      DateTime?  @map("last_login_at")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+
+  roles       UserRole[]
+  sessions    Session[]
+  emailTokens EmailToken[]
+  addresses   Address[]
+  tasks       Task[]
+
+  @@index([email])
+  @@index([status])
+  @@map("users")
+}
+
+/// A role groups permissions. A user has one primary role in Phase 1.
+model Role {
+  name        RoleName @id
+  description String
+
+  permissions RolePermission[]
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+/// A single permission key, for example `tasks.view`.
+model Permission {
+  key         String @id
+  description String
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+/// Which permissions a role has.
+model RolePermission {
+  roleName      RoleName   @map("role_name")
+  permissionKey String     @map("permission_key")
+  role          Role       @relation(fields: [roleName], references: [name], onDelete: Cascade)
+  permission    Permission @relation(fields: [permissionKey], references: [key], onDelete: Cascade)
+
+  @@id([roleName, permissionKey])
+  @@index([permissionKey])
+  @@map("role_permissions")
+}
+
+/// Which roles a user has.
+model UserRole {
+  userId    String   @map("user_id") @db.Uuid
+  roleName  RoleName @map("role_name")
+  isPrimary Boolean  @default(true) @map("is_primary")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleName], references: [name], onDelete: Cascade)
+
+  @@id([userId, roleName])
+  @@index([roleName])
+  @@map("user_roles")
+}
+
+/// A signed in session. Only the hash of the token is stored.
+model Session {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  tokenHash  String    @unique @map("token_hash")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  lastSeenAt DateTime  @default(now()) @map("last_seen_at")
+  expiresAt  DateTime  @map("expires_at")
+  ip         String?
+  userAgent  String?   @map("user_agent")
+  revokedAt  DateTime? @map("revoked_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+/// A single use token sent by email. Only the hash of the token is stored.
+model EmailToken {
+  id        String         @id @default(uuid()) @db.Uuid
+  userId    String         @map("user_id") @db.Uuid
+  type      EmailTokenType
+  tokenHash String         @unique @map("token_hash")
+  expiresAt DateTime       @map("expires_at")
+  usedAt    DateTime?      @map("used_at")
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+  @@map("email_tokens")
+}
+
 /// Immutable trail of every staff and admin write.
 model AuditLog {
   id         String   @id @default(cuid())
   actorId    String?  @map("actor_id")
   actorRole  String   @map("actor_role")
   action     String
-  entityType String   @map("entity_type")
-  entityId   String   @map("entity_id")
+  targetType String   @map("target_type")
+  targetId   String   @map("target_id")
   before     Json?
   after      Json?
-  requestId  String?  @map("request_id")
-  ipAddress  String?  @map("ip_address")
+  ip         String?
   userAgent  String?  @map("user_agent")
+  requestId  String?  @map("request_id")
   createdAt  DateTime @default(now()) @map("created_at")
 
-  @@index([entityType, entityId])
+  @@index([targetType, targetId])
   @@index([actorId])
+  @@index([action])
   @@index([createdAt])
   @@map("audit_log")
+}
+
+/// A service of the catalogue. The catalogue is data, not code.
+model Service {
+  id          String        @id @default(uuid()) @db.Uuid
+  key         String        @unique
+  name        Json
+  description Json
+  icon        String
+  status      ServiceStatus @default(DRAFT)
+  sortOrder   Int           @default(0) @map("sort_order")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  templates ServiceTemplate[]
+  tasks     Task[]
+
+  @@index([status])
+  @@map("services")
+}
+
+/// A version of the request form of a service.
+model ServiceTemplate {
+  id          String         @id @default(uuid()) @db.Uuid
+  serviceId   String         @map("service_id") @db.Uuid
+  version     Int
+  status      TemplateStatus @default(DRAFT)
+  definition  Json
+  publishedAt DateTime?      @map("published_at")
+  publishedBy String?        @map("published_by") @db.Uuid
+  createdBy   String?        @map("created_by") @db.Uuid
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  tasks   Task[]
+
+  @@unique([serviceId, version])
+  @@index([status])
+  @@map("service_templates")
+}
+
+/// A saved address of a customer.
+model Address {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @map("user_id") @db.Uuid
+  label        String
+  subCity      SubCity  @map("sub_city")
+  woreda       String?
+  landmark     String
+  directions   String
+  contactName  String    @map("contact_name")
+  contactPhone String    @map("contact_phone")
+  isDefault    Boolean   @default(false) @map("is_default")
+  latitude     Float?
+  longitude    Float?
+  deletedAt    DateTime? @map("deleted_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, deletedAt])
+  @@map("addresses")
+}
+
+/// A task of a customer.
+model Task {
+  id                 String     @id @default(uuid()) @db.Uuid
+  ref                String     @default(dbgenerated("('T-' || nextval('task_ref_seq'))")) @db.Text
+  customerId         String     @map("customer_id") @db.Uuid
+  serviceId          String     @map("service_id") @db.Uuid
+  templateId         String     @map("template_id") @db.Uuid
+  status             TaskStatus @default(DRAFT)
+  payload            Json
+  budgetCapSantim    Int?       @map("budget_cap_santim")
+  deadlineAt         DateTime?  @map("deadline_at")
+  pickupAddressId    String?    @map("pickup_address_id") @db.Uuid
+  deliveryAddressId  String?    @map("delivery_address_id") @db.Uuid
+  subCity            SubCity?           @map("sub_city")
+  submittedAt        DateTime?  @map("submitted_at")
+  cancelledAt        DateTime?  @map("cancelled_at")
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+
+  customer   User             @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  service    Service          @relation(fields: [serviceId], references: [id])
+  template   ServiceTemplate  @relation(fields: [templateId], references: [id])
+  history    TaskStatusHistory[]
+  attachments Attachment[]
+
+  @@index([customerId, status])
+  @@index([status])
+  @@index([serviceId])
+  @@map("tasks")
+}
+
+/// Every status change of a task, in order. Append-only.
+model TaskStatusHistory {
+  id         String     @id @default(uuid()) @db.Uuid
+  taskId     String     @map("task_id") @db.Uuid
+  fromStatus TaskStatus @map("from_status")
+  toStatus   TaskStatus @map("to_status")
+  actorId    String?    @map("actor_id") @db.Uuid
+  actorRole  String     @map("actor_role")
+  note       String?
+  createdAt  DateTime   @default(now()) @map("created_at")
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, createdAt])
+  @@map("task_status_history")
+}
+
+/// A file a customer uploaded. The file itself lives in the private bucket.
+model Attachment {
+  id          String         @id @default(uuid()) @db.Uuid
+  ownerId     String         @map("owner_id") @db.Uuid
+  taskId      String?        @map("task_id") @db.Uuid
+  kind        AttachmentKind @default(OTHER)
+  storageKey  String         @map("storage_key")
+  fileName    String         @map("file_name")
+  contentType String         @map("content_type")
+  sizeBytes   Int            @map("size_bytes")
+  /// Set when the file in the bucket was checked against the rules.
+  verifiedAt  DateTime?      @map("verified_at")
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  task Task? @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
+  @@index([taskId])
+  @@map("attachments")
+}
+
+/// An item a customer may not ask a tasker to buy or carry.
+///
+/// PENDING LEGAL REVIEW: the list below is an EXAMPLE only. It has to be
+/// reviewed by a lawyer before the product goes live.
+model ProhibitedItem {
+  id        String   @id @default(uuid()) @db.Uuid
+  term      String   @unique
+  note      String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([active])
+  @@map("prohibited_items")
 }

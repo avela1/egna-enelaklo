@@ -8,6 +8,8 @@ dist/
 build/
 out/
 *.tsbuildinfo
+*.oldbuild.json
+.tmp-tscheck/
 
 # Turbo
 .turbo/

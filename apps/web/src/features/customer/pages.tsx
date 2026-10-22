@@ -1,15 +1,8 @@
 import { PlaceholderPage } from '@/features/shared/PlaceholderPage';
-
-export function CustomerDashboardPage() {
-  return <PlaceholderPage titleKey="pages.customer.dashboard" />;
-}
+import { ProfilePage } from '@/features/profile/ProfilePage';
 
 export function CustomerNewTaskPage() {
   return <PlaceholderPage titleKey="pages.customer.newTask" />;
-}
-
-export function CustomerAddressesPage() {
-  return <PlaceholderPage titleKey="pages.customer.addresses" />;
 }
 
 export function CustomerPaymentsPage() {
@@ -25,5 +18,5 @@ export function CustomerHelpPage() {
 }
 
 export function CustomerProfilePage() {
-  return <PlaceholderPage titleKey="pages.customer.profile" />;
+  return <ProfilePage />;
 }

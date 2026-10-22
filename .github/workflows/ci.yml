@@ -34,8 +34,10 @@ jobs:
       NODE_ENV: test
       DATABASE_URL: postgresql://egna:egna@localhost:5432/egna_dev?schema=public
       WEB_ORIGIN: http://localhost:5173
+      WEB_URL: http://localhost:5173
       LOG_LEVEL: warn
       SESSION_SECRET: ci-only-session-secret-not-used-in-production-0000
+      SEED_PASSWORD: ci-only-seed-password-0000
       VITE_API_BASE_URL: http://localhost:3000/api/v1
 
     steps:
@@ -53,6 +55,9 @@ jobs:
 
       - name: Build design tokens
         run: npm run tokens:build
+
+      - name: Apply the migrations
+        run: npm run db:deploy
 
       - name: Lint
         run: npm run lint

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Download, Plus, Search } from 'lucide-react';
 import { Brand, LogoMark, Wordmark } from '@/components/brand';
 import {
+  Alert,
   Button,
   Card,
   CardBody,
@@ -19,6 +20,7 @@ import {
   Modal,
   Radio,
   RadioGroup,
+  RoleChip,
   Select,
   Skeleton,
   StatusChip,
@@ -35,6 +37,7 @@ import {
   TabsList,
   TabsTrigger,
   Textarea,
+  UserStatusChip,
   useToast,
 } from '@/components/ui';
 import { cn } from '@/lib/cn';
@@ -458,6 +461,38 @@ export function UiKitPage() {
           <Chip variant="warning">warning</Chip>
           <Chip variant="danger">danger</Chip>
           <Chip variant="outline">outline</Chip>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <RoleChip role="CUSTOMER" />
+          <RoleChip role="TASKER" />
+          <RoleChip role="OPERATIONS" />
+          <RoleChip role="FINANCE" />
+          <RoleChip role="ADMIN" />
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <UserStatusChip status="ACTIVE" />
+          <UserStatusChip status="INVITED" />
+          <UserStatusChip status="DISABLED" />
+        </div>
+      </Section>
+
+      <Section titleKey="uiKit.sections.alert">
+        <div className="flex flex-col gap-3">
+          <Alert tone="info" title={t('common.states.loading')} message={t('uiKit.description')} />
+          <Alert tone="success" message={t('auth.accountCreated')} />
+          <Alert tone="warning" message={t('auth.verifyEmailBanner')} />
+          <Alert tone="danger" message={t('common.states.error')} />
+          <Alert
+            tone="warning"
+            message={t('auth.verifyEmailBanner')}
+            action={
+              <Button size="sm" variant="ghost">
+                {t('auth.resendVerification')}
+              </Button>
+            }
+          />
         </div>
       </Section>
 

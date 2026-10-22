@@ -7,7 +7,8 @@ import { Button } from '@/components/ui';
 import { cn } from '@/lib/cn';
 import { usePageTitleKey } from '../hooks/usePageTitleKey';
 import { LanguageSwitch } from './LanguageSwitch';
-import { UserBlock } from './UserBlock';
+import { UserMenu } from './UserMenu';
+import { VerifyEmailBanner } from './VerifyEmailBanner';
 
 const customerNav = [
   { end: true, icon: ClipboardList, labelKey: 'nav.customer.myTasks', to: '/app' },
@@ -47,8 +48,6 @@ function CustomerNav({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 function CustomerSidebar({ onNavigate }: { onNavigate?: () => void }) {
-  const { t } = useTranslation();
-
   return (
     <div className="flex h-full flex-col">
       <div className="px-4 py-5">
@@ -65,7 +64,7 @@ function CustomerSidebar({ onNavigate }: { onNavigate?: () => void }) {
       </div>
 
       <div className="border-t border-line p-3">
-        <UserBlock roleLabel={t('common.roles.customer')} />
+        <UserMenu profileTo="/app/profile" />
       </div>
     </div>
   );
@@ -152,6 +151,7 @@ export function CustomerLayout() {
           </header>
 
           <main className="flex-1 px-4 py-6 lg:px-8">
+            <VerifyEmailBanner />
             <Outlet />
           </main>
         </div>

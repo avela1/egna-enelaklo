@@ -7,10 +7,12 @@ import { Button } from '@/components/ui';
 import { cn } from '@/lib/cn';
 import { usePageTitleKey } from '../hooks/usePageTitleKey';
 import { LanguageSwitch } from './LanguageSwitch';
-import { UserBlock } from './UserBlock';
+import { UserMenu } from './UserMenu';
+import { useAuth } from '@/features/auth/auth-context';
 
 interface StaffNavItem {
   labelKey: string;
+  permission?: string;
   to: string;
 }
 
@@ -25,35 +27,46 @@ const staffNavGroups: StaffNavGroup[] = [
     key: 'operations',
     labelKey: 'nav.staff.groups.operations',
     items: [
-      { labelKey: 'nav.staff.items.queue', to: '/staff/queue' },
-      { labelKey: 'nav.staff.items.review', to: '/staff/review' },
-      { labelKey: 'nav.staff.items.assign', to: '/staff/assign' },
-      { labelKey: 'nav.staff.items.exceptions', to: '/staff/exceptions' },
-      { labelKey: 'nav.staff.items.taskers', to: '/staff/taskers' },
-      { labelKey: 'nav.staff.items.reports', to: '/staff/reports' },
+      { labelKey: 'nav.staff.items.queue', permission: 'tasks.view', to: '/staff/queue' },
+      { labelKey: 'nav.staff.items.review', permission: 'quotes.edit', to: '/staff/review' },
+      { labelKey: 'nav.staff.items.assign', permission: 'taskers.assign', to: '/staff/assign' },
+      {
+        labelKey: 'nav.staff.items.exceptions',
+        permission: 'exceptions.resolve',
+        to: '/staff/exceptions',
+      },
+      { labelKey: 'nav.staff.items.taskers', permission: 'taskers.verify', to: '/staff/taskers' },
+      { labelKey: 'nav.staff.items.reports', permission: 'reports.view', to: '/staff/reports' },
     ],
   },
   {
     key: 'finance',
     labelKey: 'nav.staff.groups.finance',
-    items: [{ labelKey: 'nav.staff.items.payments', to: '/staff/payments' }],
+    items: [
+      { labelKey: 'nav.staff.items.payments', permission: 'payments.view', to: '/staff/payments' },
+    ],
   },
   {
     key: 'administration',
     labelKey: 'nav.staff.groups.administration',
     items: [
-      { labelKey: 'nav.staff.items.catalog', to: '/staff/catalog' },
-      { labelKey: 'nav.staff.items.templates', to: '/staff/templates' },
-      { labelKey: 'nav.staff.items.users', to: '/staff/users' },
-      { labelKey: 'nav.staff.items.roles', to: '/staff/roles' },
-      { labelKey: 'nav.staff.items.audit', to: '/staff/audit' },
-      { labelKey: 'nav.staff.items.settings', to: '/staff/settings' },
+      { labelKey: 'nav.staff.items.catalog', permission: 'catalog.edit', to: '/staff/catalog' },
+      { labelKey: 'nav.staff.items.templates', permission: 'catalog.edit', to: '/staff/templates' },
+      { labelKey: 'nav.staff.items.users', permission: 'users.manage', to: '/staff/users' },
+      { labelKey: 'nav.staff.items.roles', permission: 'roles.manage', to: '/staff/roles' },
+      { labelKey: 'nav.staff.items.audit', permission: 'audit.view', to: '/staff/audit' },
+      {
+        labelKey: 'nav.staff.items.settings',
+        permission: 'settings.manage',
+        to: '/staff/settings',
+      },
     ],
   },
 ];
 
 function StaffSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation();
+  const { hasPermission } = useAuth();
 
   return (
     <div className="flex h-full flex-col bg-ink-900">
@@ -80,32 +93,34 @@ function StaffSidebar({ onNavigate }: { onNavigate?: () => void }) {
               {t(group.labelKey)}
             </p>
             <ul className="flex flex-col gap-0.5">
-              {group.items.map((item) => (
-                <li key={item.to}>
-                  <NavLink
-                    to={item.to}
-                    onClick={onNavigate}
-                    className={({ isActive }) =>
-                      cn(
-                        'flex min-h-control items-center rounded-[10px] px-3 text-[15px] transition-colors',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-100',
-                        isActive
-                          ? 'bg-brand-500 font-bold text-white'
-                          : 'font-medium text-white/80 hover:bg-white/5 hover:text-white',
-                      )
-                    }
-                  >
-                    {t(item.labelKey)}
-                  </NavLink>
-                </li>
-              ))}
+              {group.items
+                .filter((item) => !item.permission || hasPermission(item.permission))
+                .map((item) => (
+                  <li key={item.to}>
+                    <NavLink
+                      to={item.to}
+                      onClick={onNavigate}
+                      className={({ isActive }) =>
+                        cn(
+                          'flex min-h-control items-center rounded-[10px] px-3 text-[15px] transition-colors',
+                          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-100',
+                          isActive
+                            ? 'bg-brand-500 font-bold text-white'
+                            : 'font-medium text-white/80 hover:bg-white/5 hover:text-white',
+                        )
+                      }
+                    >
+                      {t(item.labelKey)}
+                    </NavLink>
+                  </li>
+                ))}
             </ul>
           </div>
         ))}
       </nav>
 
       <div className="border-t border-white/10 p-3">
-        <UserBlock tone="dark" roleLabel={t('common.roles.operations')} />
+        <UserMenu profileTo="/staff/profile" tone="dark" />
       </div>
     </div>
   );

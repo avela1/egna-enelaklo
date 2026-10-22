@@ -23,6 +23,8 @@ export const envSchema = z.object({
     .default('postgresql://egna:egna@localhost:5432/egna_dev?schema=public'),
 
   WEB_ORIGIN: z.string().min(1).default('http://localhost:5173'),
+  /** Public URL of the web app, used to build the links in the emails. */
+  WEB_URL: z.string().min(1).default('http://localhost:5173'),
 
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
 
@@ -30,14 +32,43 @@ export const envSchema = z.object({
   SESSION_SECRET: z.string().min(32).optional(),
   COOKIE_DOMAIN: z.string().optional(),
 
+  /** Sliding lifetime of a session, and the hard cap. */
+  SESSION_TTL_DAYS: z.coerce.number().int().min(1).max(30).default(7),
+  SESSION_ABSOLUTE_TTL_DAYS: z.coerce.number().int().min(1).max(365).default(30),
+
+  /** Failed sign in attempts before the account is locked. */
+  LOGIN_MAX_ATTEMPTS: z.coerce.number().int().min(1).max(20).default(5),
+  LOGIN_LOCK_MINUTES: z.coerce.number().int().min(1).max(1440).default(15),
+
+  /** Lifetimes of the single use email tokens, in minutes. */
+  VERIFY_EMAIL_TOKEN_MINUTES: z.coerce
+    .number()
+    .int()
+    .min(5)
+    .default(24 * 60),
+  RESET_PASSWORD_TOKEN_MINUTES: z.coerce.number().int().min(5).default(60),
+  INVITE_TOKEN_MINUTES: z.coerce
+    .number()
+    .int()
+    .min(5)
+    .default(72 * 60),
+
+  /** Password used by the development seed. Never a real credential. */
+  SEED_PASSWORD: z.string().min(10).optional(),
+
+  /** Rate limits, per IP and per minute. */
+  AUTH_RATE_LIMIT: z.coerce.number().int().min(1).max(1000).default(10),
+  RATE_LIMIT: z.coerce.number().int().min(1).max(10_000).default(120),
+
   /** Mailpit in local development. */
   SMTP_HOST: z.string().default('localhost'),
   SMTP_PORT: z.coerce.number().int().min(1).max(65_535).default(1025),
   SMTP_USER: z.string().optional(),
   SMTP_PASSWORD: z.string().optional(),
   SMTP_FROM: z.string().default('egna-enelaklo <no-reply@egna-enelaklo.local>'),
+  SMTP_SECURE: booleanish.default('false'),
 
-  /** MinIO in local development. The bucket is PRIVATE and never public. */
+  /** Object storage (MinIO locally) — the bucket is PRIVATE. */
   S3_ENDPOINT: z.string().default('http://localhost:9000'),
   S3_REGION: z.string().default('us-east-1'),
   S3_BUCKET: z.string().default('egna-private'),
@@ -70,3 +101,5 @@ export function allowedOrigins(): string[] {
     .map((origin) => origin.trim())
     .filter((origin) => origin.length > 0);
 }
+
+export const isProduction = env.NODE_ENV === 'production';

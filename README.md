@@ -1,15 +1,19 @@
 # egna-enelaklo (እኛ እንላከሎ)
 
-**Your tasks. Our people. Done.**
+- [ ]
 
 A task marketplace for Addis Ababa. Customers delegate real-world errands to company-managed
 taskers. Web first: there is no marketing landing page, the root URL goes straight to sign in.
 
-- Customer portal: `/app`
-- Tasker portal: `/tasker`
-- Staff console: `/staff`
-- Public auth pages: `/sign-in`, `/register`, `/forgot-password`
-- Component reference: `/ui-kit`
+Customer portal: `/app`
+
+Tasker portal: `/tasker`
+
+Staff console: `/staff`
+
+Public auth pages: `/sign-in`, `/register`, `/forgot-password`
+
+Component reference: `/ui-kit`
 
 ---
 
@@ -36,8 +40,9 @@ cp apps/web/.env.example apps/web/.env
 # 3. start the local services (postgres, mailpit)
 npm run infra:up
 
-# 4. run the first database migration
+# 4. run the first database migration and create the development accounts
 npm run db:migrate
+npm run db:seed
 
 # 5. start the web app (5173) and the API (3000)
 npm run dev
@@ -53,6 +58,22 @@ Then open:
 | http://localhost:3000/api/docs      | Swagger UI                        |
 | http://localhost:9001               | MinIO console (private bucket)    |
 | http://localhost:8025               | Mailpit (captured emails)         |
+
+## Signing in
+
+The seed creates one account per role. They all use the value of `SEED_PASSWORD` in
+`apps/api/.env`.
+
+| Account              | Role       | Lands on  |
+| -------------------- | ---------- | --------- |
+| `admin@egna.test`    | ADMIN      | `/staff`  |
+| `ops@egna.test`      | OPERATIONS | `/staff`  |
+| `finance@egna.test`  | FINANCE    | `/staff`  |
+| `tasker@egna.test`   | TASKER     | `/tasker` |
+| `customer@egna.test` | CUSTOMER   | `/app`    |
+
+Customers can also register themselves at `/register`; the verification email arrives in
+Mailpit.
 
 > **If the machine already runs PostgreSQL on 5432** (common on a developer laptop), set
 > `POSTGRES_HOST_PORT=5433` in the root `.env` and use port 5433 in `DATABASE_URL` in
@@ -93,6 +114,8 @@ npm run dev       -w @egna-enelaklo/web    # vite, port 5173
 npm run dev       -w @egna-enelaklo/api    # nest start --watch, port 3000
 npm run test      -w @egna-enelaklo/api    # jest + supertest
 npm run prisma:migrate -w @egna-enelaklo/api
+
+npm run infra:up && npm run dev
 ```
 
 ## Repository layout
@@ -154,7 +177,14 @@ push and pull request.
 ## Documentation
 
 - [CLAUDE.md](CLAUDE.md) - the permanent rules every future session must follow
-- [docs/architecture.md](docs/architecture.md) - folder map, route map, conventions
+- [docs/architecture.md](docs/architecture.md) - folder map, route map, the auth flow, the
+  permission model
 - [docs/api-conventions.md](docs/api-conventions.md) - error format, naming, versioning, pagination
+- [docs/security.md](docs/security.md) - sessions, CSRF, rate limits, passwords, the audit log
+- [docs/data-model.md](docs/data-model.md) - every table
+- [docs/state-machine.md](docs/state-machine.md) - the task lifecycle and its diagram
+- [docs/templates.md](docs/templates.md) - the format of a request template
 - [docs/phases/phase-0.md](docs/phases/phase-0.md) - Phase 0 acceptance checklist
+- [docs/phases/phase-1.md](docs/phases/phase-1.md) - Phase 1 acceptance checklist
+- [docs/phases/phase-2.md](docs/phases/phase-2.md) - Phase 2 acceptance checklist
 - [docs/decisions](docs/decisions) - architecture decision records
