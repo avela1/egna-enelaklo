@@ -490,6 +490,13 @@
     "woreda": "ወረዳ"
   },
   "task": {
+    "attachments": {
+      "aria": "አባሪ ፋይሎች",
+      "remove": "ያስወግዱ",
+      "removeFailed": "ፋይሉን ማስወገድ አልተቻለም",
+      "view": "ይመልከቱ",
+      "viewFailed": "ፋይሉን መክፈት አልተቻለም"
+    },
     "choose": {
       "moreServices": "ተጨማሪ አገልግዶች እዚህ ይታያሉ",
       "moreServicesHint": "ካታሎጉ መረጃ ነው፤ አዲስ አገልግዳ የቅጽ ተሞዴል ብቻ ልለጋል፤ የኮድ ለውጥ አያስፈልግም።",
@@ -501,6 +508,7 @@
       "youReceive": "የሚያገኙት"
     },
     "detail": {
+      "attachments": "አባሪ ፋይሎች",
       "cancel": "ጥያቄውን ሰርዝ",
       "cancelDescription": "ሰርዝቱ ጥያቄውን ያቆምጣል። ከዚያ በኋላ አዲስ መጀመሪያ ማስጀመር ይችላሉ።",
       "cancelled": "ጥያቄው ተሰርዟል",
@@ -534,6 +542,9 @@
       "serviceFee": "የአገልግሎት ክፍያ",
       "summary": "ማጠቃለያ",
       "title": "ዝርዝሮች",
+      "fileTooLarge": "ፋይሉ ከ {{mb}} ሜጋባይት በላይ ነው",
+      "replaceFile": "ሌላ ፋይል ይምረጡ",
+      "uploaded": "ፋይል ተጭኗል",
       "uploadFailed": "ፋይሉን መጫን አልተቻለም",
       "uploading": "በመጫን ላይ...",
       "whatNext": "ቀጣይ ምን ይሆናል",

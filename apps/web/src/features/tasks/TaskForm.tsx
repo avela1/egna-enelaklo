@@ -24,15 +24,17 @@ import {
   Textarea,
 } from '@/components/ui';
 import { cn } from '@/lib/cn';
-import type { AddressSummary } from './api';
+import { attachmentUrl, type AddressSummary, type TaskAttachment } from './api';
 
 export interface TaskFormProps {
   addresses: AddressSummary[];
+  attachments?: TaskAttachment[];
   definition: TemplateDefinition;
   errors: Record<string, string>;
   language: string;
   onAddAddress: () => void;
   onChange: (values: Record<string, unknown>) => void;
+  onRemoveAttachment?: (attachmentId: string) => void;
   onUpload: (field: Field, file: File) => Promise<string>;
   uploadingField: string | null;
   values: Record<string, unknown>;
@@ -47,11 +49,13 @@ export interface TaskFormProps {
  */
 export function TaskForm({
   addresses,
+  attachments,
   definition,
   errors,
   language,
   onAddAddress,
   onChange,
+  onRemoveAttachment,
   onUpload,
   uploadingField,
   values,
@@ -70,10 +74,12 @@ export function TaskForm({
         <SectionCard
           key={section.key}
           addresses={addresses}
+          attachments={attachments}
           errors={errors}
           language={language}
           onAddAddress={onAddAddress}
           onChange={setValue}
+          onRemoveAttachment={onRemoveAttachment}
           onUpload={onUpload}
           section={section}
           uploadingField={uploadingField}
@@ -92,10 +98,12 @@ function isSectionVisible(section: Section, wire: TaskPayload): boolean {
 
 interface SectionCardProps {
   addresses: AddressSummary[];
+  attachments?: TaskAttachment[];
   errors: Record<string, string>;
   language: string;
   onAddAddress: () => void;
   onChange: (key: string, value: unknown) => void;
+  onRemoveAttachment?: (attachmentId: string) => void;
   onUpload: (field: Field, file: File) => Promise<string>;
   section: Section;
   uploadingField: string | null;
@@ -106,10 +114,12 @@ interface SectionCardProps {
 
 function SectionCard({
   addresses,
+  attachments,
   errors,
   language,
   onAddAddress,
   onChange,
+  onRemoveAttachment,
   onUpload,
   section,
   uploadingField,
@@ -136,11 +146,13 @@ function SectionCard({
             <FieldControl
               key={field.key}
               addresses={addresses}
+              attachment={attachments?.find((entry) => entry.id === values[field.key])}
               error={errors[field.key]}
               field={field}
               language={language}
               onAddAddress={onAddAddress}
               onChange={(value) => onChange(field.key, value)}
+              onRemoveAttachment={onRemoveAttachment}
               onUpload={onUpload}
               uploading={uploadingField === field.key}
               value={values[field.key]}
@@ -154,11 +166,13 @@ function SectionCard({
 
 interface FieldControlProps {
   addresses: AddressSummary[];
+  attachment?: TaskAttachment;
   error?: string;
   field: Field;
   language: string;
   onAddAddress: () => void;
   onChange: (value: unknown) => void;
+  onRemoveAttachment?: (attachmentId: string) => void;
   onUpload: (field: Field, file: File) => Promise<string>;
   uploading: boolean;
   value: unknown;
@@ -166,11 +180,13 @@ interface FieldControlProps {
 
 function FieldControl({
   addresses,
+  attachment,
   error,
   field,
   language,
   onAddAddress,
   onChange,
+  onRemoveAttachment,
   onUpload,
   uploading,
   value,
@@ -330,9 +346,11 @@ function FieldControl({
       return (
         <FormField error={error} hint={help} htmlFor={fieldId} label={label}>
           <FileControl
+            attachment={attachment}
             field={field}
             id={fieldId}
             onChange={(fileValue) => onChange(fileValue)}
+            onRemoveAttachment={onRemoveAttachment}
             onUpload={onUpload}
             uploading={uploading}
           />
@@ -365,41 +383,93 @@ function FieldControl({
 }
 
 function FileControl({
+  attachment,
   field,
   id,
   onChange,
+  onRemoveAttachment,
   onUpload,
   uploading,
 }: {
+  attachment?: TaskAttachment;
   field: Field;
   id: string;
   onChange: (value: unknown) => void;
+  onRemoveAttachment?: (attachmentId: string) => void;
   onUpload: (field: Field, file: File) => Promise<string>;
   uploading: boolean;
 }) {
   const { t } = useTranslation();
   const [error, setError] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [newFileName, setNewFileName] = useState<string | null>(null);
 
   const handleFile = async (file: File | undefined) => {
     if (!file) return;
 
     setError(null);
-    setFileName(file.name);
+    setNewFileName(file.name);
 
     try {
       const attachmentId = await onUpload(field, file);
+
+      // The old file is no longer referenced: remove it from the bucket.
+      if (attachment && onRemoveAttachment) {
+        onRemoveAttachment(attachment.id);
+      }
+
       onChange(attachmentId);
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : t('task.form.uploadFailed'));
     }
   };
 
+  const openExisting = async (attachmentId: string) => {
+    try {
+      const read = await attachmentUrl(attachmentId);
+      window.open(read.url, '_blank', 'noopener');
+    } catch {
+      setError(t('task.attachments.viewFailed'));
+    }
+  };
+
   return (
     <div className="flex flex-col gap-2">
+      {attachment ? (
+        <p className="flex items-center gap-2 rounded-control border border-line bg-canvas px-3 py-2 text-sm text-ink-700">
+          <Paperclip aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-brand-700" />
+          <span className="min-w-0 flex-1 truncate font-semibold text-ink-900">
+            {t('task.form.uploaded')} · {attachment.fileName}
+          </span>
+          <button
+            type="button"
+            onClick={() => void openExisting(attachment.id)}
+            className="h-control rounded-control border border-line bg-surface px-3 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+          >
+            {t('task.attachments.view')}
+          </button>
+          {onRemoveAttachment ? (
+            <button
+              type="button"
+              onClick={() => {
+                setNewFileName(null);
+                onChange(undefined);
+                onRemoveAttachment(attachment.id);
+              }}
+              className="h-control rounded-control border border-line bg-surface px-3 text-sm font-semibold text-danger-text transition-colors hover:bg-danger-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            >
+              {t('task.attachments.remove')}
+            </button>
+          ) : null}
+        </p>
+      ) : null}
+
       <label className="flex min-h-control cursor-pointer items-center justify-center gap-2 rounded-control border border-dashed border-line bg-canvas px-4 text-[15px] font-semibold text-brand-700 transition-colors hover:bg-brand-50 focus-within:ring-2 focus-within:ring-brand-500">
         <Upload aria-hidden="true" className="h-4 w-4" />
-        {uploading ? t('task.form.uploading') : t('task.form.chooseFile')}
+        {uploading
+          ? t('task.form.uploading')
+          : attachment
+            ? t('task.form.replaceFile')
+            : t('task.form.chooseFile')}
         <input
           id={id}
           type="file"
@@ -409,10 +479,12 @@ function FileControl({
         />
       </label>
 
-      {fileName ? (
+      {uploading ? (
+        <p className="text-xs text-ink-500">{t('task.form.uploading')}</p>
+      ) : newFileName ? (
         <p className="flex items-center gap-2 text-xs text-ink-500">
           <Paperclip aria-hidden="true" className="h-3.5 w-3.5" />
-          {fileName}
+          {newFileName}
         </p>
       ) : null}
       {error ? (

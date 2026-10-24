@@ -54,6 +54,23 @@ export async function seedRolesAndPermissions(prisma: PrismaClient): Promise<voi
   }
 }
 
+/** Sorts object keys recursively so two JSON shapes compare equal. */
+function sortedJson(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(sortedJson);
+
+  if (value !== null && typeof value === 'object') {
+    const output: Record<string, unknown> = {};
+
+    for (const key of Object.keys(value as Record<string, unknown>).sort()) {
+      output[key] = sortedJson((value as Record<string, unknown>)[key]);
+    }
+
+    return output;
+  }
+
+  return value;
+}
+
 /** Creates the catalogue: the services and their live first version. */
 export async function seedCatalogue(prisma: PrismaClient): Promise<void> {
   for (const service of SEED_SERVICES) {
@@ -81,10 +98,40 @@ export async function seedCatalogue(prisma: PrismaClient): Promise<void> {
     });
 
     if (live) {
-      // The live version is never overwritten: a task keeps its version.
+      const unchanged =
+        JSON.stringify(sortedJson(live.definition)) ===
+        JSON.stringify(sortedJson(service.template));
+
+      if (unchanged) {
+        // The live version is never overwritten: a task keeps its version.
+        await prisma.serviceTemplate.updateMany({
+          where: { serviceId: saved.id, status: 'DRAFT' },
+          data: { status: 'ARCHIVED' },
+        });
+
+        continue;
+      }
+
+      // The definition changed: archive the old live version and publish a
+      // new one. Existing tasks keep pointing at their own version.
+      const highest = await prisma.serviceTemplate.aggregate({
+        where: { serviceId: saved.id },
+        _max: { version: true },
+      });
+
       await prisma.serviceTemplate.updateMany({
-        where: { serviceId: saved.id, status: 'DRAFT' },
+        where: { serviceId: saved.id, status: 'LIVE' },
         data: { status: 'ARCHIVED' },
+      });
+
+      await prisma.serviceTemplate.create({
+        data: {
+          serviceId: saved.id,
+          version: (highest._max.version ?? 0) + 1,
+          status: 'LIVE',
+          definition: service.template as never,
+          publishedAt: new Date(),
+        },
       });
 
       continue;

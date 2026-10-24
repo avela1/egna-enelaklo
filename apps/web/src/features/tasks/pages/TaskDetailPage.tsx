@@ -17,6 +17,7 @@ import {
   useToast,
 } from '@/components/ui';
 import { useCancelTask, useTask } from '../api';
+import { AttachmentList } from '../AttachmentList';
 
 export function TaskDetailPage() {
   const { t, i18n } = useTranslation();
@@ -137,6 +138,13 @@ export function TaskDetailPage() {
                 <span className="text-[15px] font-semibold text-ink-900">
                   ETB {(task.data.budgetCapSantim / 100).toLocaleString()}
                 </span>
+              </div>
+            ) : null}
+
+            {task.data.attachments.length > 0 ? (
+              <div className="flex flex-col gap-2 pt-2">
+                <p className="text-sm font-bold text-ink-700">{t('task.detail.attachments')}</p>
+                <AttachmentList attachments={task.data.attachments} />
               </div>
             ) : null}
           </CardBody>

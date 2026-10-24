@@ -250,6 +250,7 @@ export class TasksService {
         include: {
           service: { select: { key: true, name: true, icon: true } },
           template: { select: { id: true, version: true, definition: true } },
+          _count: { select: { attachments: true } },
         },
         orderBy: { updatedAt: 'desc' },
         skip,
@@ -274,6 +275,7 @@ export class TasksService {
           title: summarizePayload(definition, payload),
           subCity: task.subCity,
           budgetCapSantim: task.budgetCapSantim,
+          attachmentCount: task._count.attachments,
           deadlineAt: task.deadlineAt?.toISOString() ?? null,
           submittedAt: task.submittedAt?.toISOString() ?? null,
           updatedAt: task.updatedAt.toISOString(),

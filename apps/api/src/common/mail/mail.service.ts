@@ -18,6 +18,12 @@ export class MailService {
       host: env.SMTP_HOST,
       port: env.SMTP_PORT,
       secure: env.SMTP_SECURE,
+      // Fail fast instead of hanging the request when the SMTP server does
+      // not answer. `localhost` can stall on some Windows setups, prefer
+      // 127.0.0.1 in the environment.
+      connectionTimeout: 5_000,
+      greetingTimeout: 5_000,
+      socketTimeout: 10_000,
       ...(env.SMTP_USER && env.SMTP_PASSWORD
         ? { auth: { user: env.SMTP_USER, pass: env.SMTP_PASSWORD } }
         : {}),

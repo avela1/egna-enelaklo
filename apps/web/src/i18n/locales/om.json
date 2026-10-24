@@ -490,6 +490,13 @@
     "woreda": "Woredaa"
   },
   "task": {
+    "attachments": {
+      "aria": "Wabiwwan",
+      "remove": "Haqi",
+      "removeFailed": "Faayilii haquun hin danda'amne",
+      "view": "Ilaali",
+      "viewFailed": "Faayilii banaa hin dandeenye"
+    },
     "choose": {
       "moreServices": "Tajaajilaa dabalataa idile argama",
       "moreServicesHint": "Galmee tajaajilaa daataa yoo ta'u, tajaajilaa haaraa barreeffama qofa qophaa'e yoo qabu qofti hin qabu.",
@@ -501,6 +508,7 @@
       "youReceive": "Qabiyyee argachu"
     },
     "detail": {
+      "attachments": "Wabiwwan",
       "cancel": "Wajjiraa haqi unsuu",
       "cancelDescription": "Haqi unsuun wajjiraa dhaafama. Booddii dhufuu haaraa jalqabsaa.",
       "cancelled": "Wajjiraan haqi unsame",
@@ -534,7 +542,11 @@
       "serviceFee": "Kaffaltii tajaajilaa",
       "summary": "Gabaa",
       "title": "Waaqa",
+      "fileTooLarge": "Faayiliin {{mb}} MB caala",
+      "replaceFile": "Faayilii bira filadhu",
+      "uploaded": "Faayiliin olkaa'ameera",
       "uploadFailed": "Faayilii olkaa'uu hin dandeenne",
+      "fileTooLarge": "Faayiliin {{mb}} MB caala",
       "uploading": "Olkaa'aa jira...",
       "whatNext": "Biyyaa booda maaltu",
       "steps": {

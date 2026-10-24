@@ -490,6 +490,13 @@
     "woreda": "Woreda"
   },
   "task": {
+    "attachments": {
+      "aria": "Attachments",
+      "remove": "Remove",
+      "removeFailed": "The file could not be removed",
+      "view": "View",
+      "viewFailed": "The file could not be opened"
+    },
     "choose": {
       "moreServices": "More services will appear here",
       "moreServicesHint": "The catalogue is data, so a new service only needs a form template, never a code change.",
@@ -501,6 +508,7 @@
       "youReceive": "You receive"
     },
     "detail": {
+      "attachments": "Attachments",
       "cancel": "Cancel request",
       "cancelDescription": "Cancelling stops the request. You can always start a new one later.",
       "cancelled": "The request is cancelled",
@@ -534,6 +542,9 @@
       "serviceFee": "Service fee",
       "summary": "Summary",
       "title": "The details",
+      "fileTooLarge": "The file is larger than {{mb}} MB",
+      "replaceFile": "Choose another file",
+      "uploaded": "File uploaded",
       "uploadFailed": "The file could not be uploaded",
       "uploading": "Uploading...",
       "whatNext": "What happens next",

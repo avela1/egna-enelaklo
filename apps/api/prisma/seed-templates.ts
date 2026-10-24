@@ -99,6 +99,17 @@ export const SEED_SERVICES: SeedService[] = [
                 },
               ],
             },
+            {
+              key: 'referencePhoto',
+              type: 'file',
+              label: { en: 'Reference photo (optional)' },
+              help: {
+                en: 'A photo of the item or its packaging, so the tasker finds exactly what you mean. JPG or PNG, up to 5 MB.',
+              },
+              required: false,
+              allowedTypes: ['image/jpeg', 'image/png'],
+              maxMb: 5,
+            },
           ],
         },
         {
@@ -415,6 +426,17 @@ export const SEED_SERVICES: SeedService[] = [
               type: 'textarea',
               label: { en: 'Describe the item' },
               required: true,
+            },
+            {
+              key: 'itemPhoto',
+              type: 'file',
+              label: { en: 'Photo of the item (optional)' },
+              help: {
+                en: 'A photo helps the tasker recognise it at the pickup. JPG or PNG, up to 5 MB.',
+              },
+              required: false,
+              allowedTypes: ['image/jpeg', 'image/png'],
+              maxMb: 5,
             },
             {
               key: 'packageSize',

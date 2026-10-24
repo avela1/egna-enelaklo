@@ -116,6 +116,7 @@ npm run test      -w @egna-enelaklo/api    # jest + supertest
 npm run prisma:migrate -w @egna-enelaklo/api
 
 npm run infra:up && npm run dev
+npm run infra:up && npm run db:migrate && npm run db:seed && npm run dev
 ```
 
 ## Repository layout

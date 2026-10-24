@@ -22,7 +22,7 @@ import {
 } from '@/components/ui';
 import { apiRequest } from '@/lib/api';
 import { AddressFormModal } from '@/features/addresses/AddressFormModal';
-import { useAddresses, useSaveDraft, useTask, uploadFile } from '../api';
+import { useAddresses, useSaveDraft, useTask, removeAttachment, uploadFile } from '../api';
 import { TaskForm } from '../TaskForm';
 import { TaskStepper } from './ChooseServicePage';
 
@@ -117,10 +117,22 @@ export function TaskFormPage() {
     setUploadingField(field.key);
 
     try {
+      const maxBytes = (field.maxMb ?? 5) * 1024 * 1024;
+      if (file.size > maxBytes) {
+        throw new Error(t('task.form.fileTooLarge', { mb: field.maxMb ?? 5 }));
+      }
+
+      const key = field.key.toLowerCase();
+      const kind = key.includes('authorization')
+        ? 'AUTHORIZATION_LETTER'
+        : key.includes('photo')
+          ? 'REFERENCE_PHOTO'
+          : 'OTHER';
+
       const result = await uploadFile({
         contentType: file.type || 'application/octet-stream',
         file,
-        kind: field.key.toLowerCase().includes('authorization') ? 'AUTHORIZATION_LETTER' : 'OTHER',
+        kind,
         taskId: task.data?.id,
       });
 
@@ -174,6 +186,15 @@ export function TaskFormPage() {
     );
   };
 
+  /** Removes an uploaded file. The form clears the answer that pointed at it. */
+  const handleRemoveAttachment = (attachmentId: string) => {
+    removeAttachment(attachmentId).catch(() => {
+      toast({ title: t('task.attachments.removeFailed'), variant: 'error' });
+    });
+
+    void queryClient.invalidateQueries({ queryKey: ['task', id] });
+  };
+
   const budgetField = definition.sections
     .flatMap((section) => section.fields)
     .find((field) => field.mapsTo === 'budgetCap');
@@ -203,6 +224,7 @@ export function TaskFormPage() {
 
           <TaskForm
             addresses={addresses.data ?? []}
+            attachments={task.data.attachments}
             definition={definition}
             errors={errors}
             language={i18n.language}
@@ -211,6 +233,7 @@ export function TaskFormPage() {
               setValues(next);
               setErrors({});
             }}
+            onRemoveAttachment={handleRemoveAttachment}
             onUpload={upload}
             uploadingField={uploadingField}
             values={values}

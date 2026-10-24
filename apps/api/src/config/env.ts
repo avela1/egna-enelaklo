@@ -60,8 +60,8 @@ export const envSchema = z.object({
   AUTH_RATE_LIMIT: z.coerce.number().int().min(1).max(1000).default(10),
   RATE_LIMIT: z.coerce.number().int().min(1).max(10_000).default(120),
 
-  /** Mailpit in local development. */
-  SMTP_HOST: z.string().default('localhost'),
+  /** Mailpit in local development. Prefer 127.0.0.1: `localhost` can hang on Windows. */
+  SMTP_HOST: z.string().default('127.0.0.1'),
   SMTP_PORT: z.coerce.number().int().min(1).max(65_535).default(1025),
   SMTP_USER: z.string().optional(),
   SMTP_PASSWORD: z.string().optional(),

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ClipboardList, Package, Plus } from 'lucide-react';
+import { ClipboardList, Package, Paperclip, Plus } from 'lucide-react';
 import { Button, Card, CardBody, Chip, EmptyState, Skeleton, StatusChip } from '@/components/ui';
 import { cn } from '@/lib/cn';
 import { useTasks, type TaskListItem } from '../api';
@@ -183,6 +183,16 @@ function TaskRow({ task }: { task: TaskListItem }) {
       </div>
 
       <div className="flex items-center gap-2">
+        {task.attachmentCount > 0 ? (
+          <span
+            aria-label={t('task.attachments.aria')}
+            title={t('task.attachments.aria')}
+            className="flex h-control items-center gap-1 rounded-control bg-brand-50 px-2 text-sm font-semibold text-brand-700"
+          >
+            <Paperclip aria-hidden="true" className="h-3.5 w-3.5" />
+            {task.attachmentCount}
+          </span>
+        ) : null}
         {task.status === 'DRAFT' ? <Chip variant="warning">{t('task.list.draft')}</Chip> : null}
         <Link to={`/app/tasks/${task.id}`}>
           <Button size="sm" variant="secondary">

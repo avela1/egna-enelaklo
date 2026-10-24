@@ -14,6 +14,7 @@ import {
   useToast,
 } from '@/components/ui';
 import { useSubmitTask, useTask } from '../api';
+import { AttachmentList } from '../AttachmentList';
 import { TaskStepper } from './ChooseServicePage';
 
 export function TaskReviewPage() {
@@ -98,12 +99,8 @@ export function TaskReviewPage() {
             <CardHeader>
               <CardTitle>{t('task.review.attachments')}</CardTitle>
             </CardHeader>
-            <CardBody className="flex flex-col gap-2">
-              {task.data.attachments.map((attachment) => (
-                <p key={attachment.id} className="text-sm text-ink-700">
-                  {attachment.fileName}
-                </p>
-              ))}
+            <CardBody>
+              <AttachmentList attachments={task.data.attachments} />
             </CardBody>
           </Card>
         ) : null}

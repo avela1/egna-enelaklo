@@ -30,6 +30,7 @@ export interface AddressSummary {
 }
 
 export interface TaskListItem {
+  attachmentCount: number;
   budgetCapSantim: number | null;
   createdAt: string;
   deadlineAt: string | null;
@@ -46,6 +47,14 @@ export interface TaskListItem {
   updatedAt: string;
 }
 
+export interface TaskAttachment {
+  contentType: string;
+  fileName: string;
+  id: string;
+  kind: string;
+  sizeBytes: number;
+}
+
 export interface TaskHistoryEntry {
   actorRole: string;
   createdAt: string;
@@ -56,13 +65,7 @@ export interface TaskHistoryEntry {
 }
 
 export interface TaskDetail {
-  attachments: {
-    contentType: string;
-    fileName: string;
-    id: string;
-    kind: string;
-    sizeBytes: number;
-  }[];
+  attachments: TaskAttachment[];
   budgetCapSantim: number | null;
   cancelledAt: string | null;
   createdAt: string;
@@ -190,7 +193,13 @@ export interface UploadResult {
   uploadUrl: string;
 }
 
-/** Uploads a file to the private bucket with a presigned URL. */
+export interface AttachmentReadUrl {
+  contentType: string;
+  fileName: string;
+  url: string;
+}
+
+/** Uploads a file to the private bucket with a presigned URL and verifies it. */
 export async function uploadFile(input: {
   contentType: string;
   file: File;
@@ -218,5 +227,19 @@ export async function uploadFile(input: {
     throw new Error('The file could not be uploaded');
   }
 
+  // The server checks what really arrived in the bucket and marks the file
+  // as verified. A file that does not follow the rules is removed.
+  await apiRequest(`/attachments/${sign.attachmentId}/confirm`, { method: 'POST' });
+
   return sign;
+}
+
+/** Asks for a short lived URL to read an attachment. */
+export function attachmentUrl(id: string) {
+  return apiRequest<AttachmentReadUrl>(`/attachments/${id}/url`);
+}
+
+/** Removes an attachment of the signed in customer. */
+export function removeAttachment(id: string) {
+  return apiRequest<{ ok: boolean }>(`/attachments/${id}`, { method: 'DELETE' });
 }
