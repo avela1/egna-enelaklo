@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { TaskPayload } from '@egna-enelaklo/shared';
-import type { PrismaService } from '../../common/prisma/prisma.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
 
 export interface ProhibitedMatch {
   field: string;

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import type { AddressValues } from '@egna-enelaklo/shared';
-import type { PrismaService } from '../../common/prisma/prisma.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
 
 const MAX_ADDRESSES = 20;
 

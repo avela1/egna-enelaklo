@@ -14,7 +14,7 @@ import { AddressSchema, type AddressValues } from '@egna-enelaklo/shared';
 import { CurrentUser } from '../../common/auth/decorators';
 import type { Principal } from '../../common/auth/principal';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { AddressesService } from './addresses.service';
+import { AddressesService } from './addresses.service';
 
 @ApiTags('addresses')
 @Controller('addresses')

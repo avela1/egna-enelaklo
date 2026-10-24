@@ -4,7 +4,7 @@ import type { TaskStatus } from '@egna-enelaklo/shared';
 import { TaskQuerySchema, type TaskQuery } from '@egna-enelaklo/shared';
 import { RequirePermission } from '../../common/auth/decorators';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { PrismaService } from '../../common/prisma/prisma.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
 
 @ApiTags('staff tasks')
 @Controller('staff/tasks')

@@ -13,13 +13,13 @@ import {
   type RegisterValues,
   type ResetPasswordInput,
 } from '@egna-enelaklo/shared';
-import type { CsrfService } from '../../common/csrf/csrf.service';
+import { CsrfService } from '../../common/csrf/csrf.service';
 import { CurrentUser, Public } from '../../common/auth/decorators';
 import type { AuthenticatedRequest, Principal } from '../../common/auth/principal';
 import { requestMeta } from '../../common/http/request-meta';
 import { clearSessionCookie, setSessionCookie } from '../../common/http/session-cookie';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { AuthService } from './auth.service';
+import { AuthService } from './auth.service';
 
 @ApiTags('auth')
 @Controller('auth')

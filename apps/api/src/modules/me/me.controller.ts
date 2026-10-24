@@ -10,8 +10,8 @@ import { CurrentUser } from '../../common/auth/decorators';
 import type { AuthenticatedRequest, Principal } from '../../common/auth/principal';
 import { requestMeta } from '../../common/http/request-meta';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { MeService } from './me.service';
-import type { AuthService } from '../auth/auth.service';
+import { MeService } from './me.service';
+import { AuthService } from '../auth/auth.service';
 
 @ApiTags('me')
 @Controller('me')

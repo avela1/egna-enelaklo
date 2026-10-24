@@ -23,7 +23,7 @@ import { CurrentUser, RequirePermission } from '../../../common/auth/decorators'
 import type { AuthenticatedRequest, Principal } from '../../../common/auth/principal';
 import { requestMeta } from '../../../common/http/request-meta';
 import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
-import type { StaffUsersService } from './staff-users.service';
+import { StaffUsersService } from './staff-users.service';
 
 @ApiTags('staff users')
 @Controller('staff/users')

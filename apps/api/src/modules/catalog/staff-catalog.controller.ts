@@ -23,7 +23,7 @@ import { CurrentUser, RequirePermission } from '../../common/auth/decorators';
 import type { AuthenticatedRequest, Principal } from '../../common/auth/principal';
 import { requestMeta } from '../../common/http/request-meta';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { CatalogService } from './catalog.service';
+import { CatalogService } from './catalog.service';
 
 @ApiTags('staff catalog')
 @Controller('staff')

@@ -23,7 +23,7 @@ import {
 import { CurrentUser } from '../../common/auth/decorators';
 import type { Principal } from '../../common/auth/principal';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { TasksService } from './tasks.service';
+import { TasksService } from './tasks.service';
 
 @ApiTags('tasks')
 @Controller('tasks')

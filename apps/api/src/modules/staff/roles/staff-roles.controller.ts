@@ -5,7 +5,7 @@ import { CurrentUser, RequirePermission } from '../../../common/auth/decorators'
 import type { AuthenticatedRequest, Principal } from '../../../common/auth/principal';
 import { requestMeta } from '../../../common/http/request-meta';
 import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
-import type { StaffRolesService } from './staff-roles.service';
+import { StaffRolesService } from './staff-roles.service';
 
 @ApiTags('staff roles')
 @Controller('staff/roles')

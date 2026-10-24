@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import type { Prisma, RoleName, UserStatus } from '@prisma/client';
 import type { InviteUserValues, StaffUserQuery } from '@egna-enelaklo/shared';
-import type { AuditService } from '../../../common/audit/audit.service';
-import type { MailService } from '../../../common/mail/mail.service';
-import type { PrismaService } from '../../../common/prisma/prisma.service';
-import type { SessionService } from '../../../common/services/session.service';
+import { AuditService } from '../../../common/audit/audit.service';
+import { MailService } from '../../../common/mail/mail.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { SessionService } from '../../../common/services/session.service';
 import { hashToken } from '../../../common/services/session.service';
 import type { Principal } from '../../../common/auth/principal';
 import type { RequestMeta } from '../../../common/http/request-meta';

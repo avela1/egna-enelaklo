@@ -6,7 +6,7 @@ import { CurrentUser, RequirePermission } from '../../../common/auth/decorators'
 import type { AuthenticatedRequest, Principal } from '../../../common/auth/principal';
 import { requestMeta } from '../../../common/http/request-meta';
 import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
-import type { StaffAuditService } from './staff-audit.service';
+import { StaffAuditService } from './staff-audit.service';
 import { csvCell } from './staff-audit.service';
 
 const CSV_COLUMNS = [

@@ -5,8 +5,8 @@ import {
   type PermissionKey,
   type RolePermissionsValues,
 } from '@egna-enelaklo/shared';
-import type { AuditService } from '../../../common/audit/audit.service';
-import type { PrismaService } from '../../../common/prisma/prisma.service';
+import { AuditService } from '../../../common/audit/audit.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import type { Principal } from '../../../common/auth/principal';
 import type { RequestMeta } from '../../../common/http/request-meta';
 

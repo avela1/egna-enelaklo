@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import type { Reflector } from '@nestjs/core';
+import { Reflector } from '@nestjs/core';
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
-import type { SessionService } from '../services/session.service';
+import { SessionService } from '../services/session.service';
 import { IS_PUBLIC_KEY } from './decorators';
 import { parseCookies, SESSION_COOKIE } from '../http/cookies';
 import type { AuthenticatedRequest } from './principal';

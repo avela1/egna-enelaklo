@@ -2,8 +2,8 @@ import { createHash, randomBytes } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import type { Session } from '@prisma/client';
 import { env } from '../../config/env';
-import type { PrismaService } from '../prisma/prisma.service';
-import type { UsersService } from './users.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { UsersService } from './users.service';
 import type { Principal } from '../auth/principal';
 
 const DAY_MS = 24 * 60 * 60 * 1000;

@@ -5,8 +5,8 @@ import {
   type CanActivate,
   type ExecutionContext,
 } from '@nestjs/common';
-import type { Reflector } from '@nestjs/core';
-import type { AuditService } from '../audit/audit.service';
+import { Reflector } from '@nestjs/core';
+import { AuditService } from '../audit/audit.service';
 import { PERMISSION_KEY } from './decorators';
 import type { AuthenticatedRequest } from './principal';
 
