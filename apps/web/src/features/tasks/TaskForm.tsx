@@ -424,10 +424,19 @@ function FileControl({
   };
 
   const openExisting = async (attachmentId: string) => {
+    // The tab is opened synchronously (inside the click handler) so browsers
+    // do not block it as a popup, and it is navigated once the signed URL
+    // arrives. Without the storage to read from, the tab is closed again.
+    const tab = window.open('about:blank');
     try {
       const read = await attachmentUrl(attachmentId);
-      window.open(read.url, '_blank', 'noopener');
+      if (tab) {
+        tab.location.href = read.url;
+      } else {
+        setError(t('task.attachments.viewFailed'));
+      }
     } catch {
+      tab?.close();
       setError(t('task.attachments.viewFailed'));
     }
   };

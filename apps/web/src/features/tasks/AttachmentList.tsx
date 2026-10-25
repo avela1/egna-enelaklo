@@ -12,6 +12,22 @@ export function formatBytes(bytes: number): string {
 }
 
 /**
+ * Opens a signed URL in a new browser tab.
+ *
+ * A programmatic anchor click opens a tab, while window.open with a features
+ * string would open a popup window instead.
+ */
+export function openAttachmentInNewTab(url: string): void {
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.target = '_blank';
+  anchor.rel = 'noopener';
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+}
+
+/**
  * Lists the attachments of a task with a view button for each.
  *
  * The files live in a private bucket: viewing asks the API for a short
@@ -28,10 +44,19 @@ export function AttachmentList({
   const [errorId, setErrorId] = useState<string | null>(null);
 
   const open = async (id: string) => {
+    // The tab is opened synchronously (inside the click handler) so browsers
+    // do not block it as a popup, and it is navigated once the signed URL
+    // arrives. Without the storage to read from, the tab is closed again.
+    const tab = window.open('about:blank');
     try {
       const read = await attachmentUrl(id);
-      window.open(read.url, '_blank', 'noopener');
+      if (tab) {
+        tab.location.href = read.url;
+      } else {
+        setErrorId(id);
+      }
     } catch {
+      tab?.close();
       setErrorId(id);
     }
   };

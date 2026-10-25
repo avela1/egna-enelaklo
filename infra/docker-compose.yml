@@ -3,16 +3,21 @@
 #   docker compose -f infra/docker-compose.yml up -d
 #
 # PostgreSQL  database          localhost:5432
-# MinIO       S3 API            localhost:9000   (console on 9001)
+# SeaweedFS   S3 API            localhost:9000
 # Mailpit     SMTP / web UI     localhost:1025   (UI on 8025)
 #
-# The MinIO bucket is PRIVATE: objects are only reachable through short lived
-# signed URLs that the API hands out in later phases.
+# The bucket is PRIVATE: objects are only reachable through short lived
+# signed URLs that the API hands out.
 #
-# MinIO runs behind the "storage" profile so that a registry which cannot
-# reach minio/minio does not block the rest of the stack:
+# The S3-compatible storage runs behind the "storage" profile so that a
+# registry which cannot reach the image does not block the rest of the stack:
 #
 #   docker compose -f infra/docker-compose.yml --profile storage up -d
+#
+# MinIO itself is not used any more: its community edition was archived
+# upstream and its images are no longer pullable (Docker Hub access denied,
+# dl.min.io returns 410). SeaweedFS is S3-compatible and works with the same
+# bucket and key layout. Decision record: docs/decisions.
 #
 # POSTGRES_HOST_PORT lets you move the database off 5432 when the host already
 # runs a PostgreSQL (set it in the root .env, then use the same port in
@@ -40,41 +45,19 @@ services:
       retries: 12
       start_period: 10s
 
-  minio:
-    image: minio/minio:latest
-    container_name: egna-minio
+  # S3-compatible storage for the private bucket. In dev it accepts any
+  # access key, so the egna / egna-secret pair in apps/api/.env still works.
+  storage:
+    image: chrislusf/seaweedfs:latest
+    container_name: egna-storage
     restart: unless-stopped
     profiles: ['storage']
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: egna
-      MINIO_ROOT_PASSWORD: egna-secret
+    command: server -dir /data -master.volumeSizeLimitMB=10240 -s3 -s3.port=9000 -ip.bind=0.0.0.0
     ports:
       - '9000:9000'
-      - '9001:9001'
+      - '9333:9333'
     volumes:
       - egna-minio-data:/data
-    healthcheck:
-      test: ['CMD', 'mc', 'ready', 'local']
-      interval: 5s
-      timeout: 5s
-      retries: 12
-      start_period: 10s
-
-  minio-init:
-    image: minio/mc:latest
-    container_name: egna-minio-init
-    profiles: ['storage']
-    depends_on:
-      minio:
-        condition: service_healthy
-    entrypoint: >
-      /bin/sh -c "
-      mc alias set egna http://minio:9000 egna egna-secret;
-      mc mb --ignore-existing egna/egna-private;
-      mc anonymous set none egna/egna-private;
-      echo 'Private bucket egna-private is ready.';
-      "
 
   mailpit:
     image: axllent/mailpit:latest

@@ -24,3 +24,4 @@ Format:
 | [0002](0002-design-tokens-as-single-source-of-truth.md) | Design tokens are generated from one tokens.json          | accepted |
 | [0003](0003-money-is-integer-santim.md)                 | Money is always integer santim                            | accepted |
 | [0004](0004-one-web-app-four-portals.md)                | One web app serves the four portals                       | accepted |
+| [0005](0005-seaweedfs-replaces-minio.md)                | SeaweedFS replaces MinIO for local file storage           | accepted |
