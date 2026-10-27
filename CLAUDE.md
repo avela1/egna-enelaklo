@@ -117,5 +117,10 @@ egna-enelaklo/
 requestId }` for every error and logs with pino.
 - New endpoints live under `/api/v1`, are documented in Swagger and follow
   `docs/api-conventions.md`.
+- In `apps/api`, every class marked `@Injectable()` must be imported with a VALUE import, never
+  `import type`. Nest reads constructor types from the emitted metadata; a type-only import
+  erases it and the app fails at boot with "Nest can't resolve dependencies ... Function".
+  `apps/api/test/di-imports.spec.ts` fails on violations, and the ESLint rule is off there on
+  purpose — do not re-enable `consistent-type-imports` for the API.
 - Run `npm run lint`, `npm run typecheck`, `npm run test` and `npm run build` before you stop.
 - Never commit `.env` files, real credentials or generated `dist/` output.
