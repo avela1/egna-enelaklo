@@ -14,12 +14,11 @@ import {
   type ResetPasswordInput,
 } from '@egna-enelaklo/shared';
 import { env } from '../../config/env';
-import type { AuditService } from '../../common/audit/audit.service';
-import type { MailService } from '../../common/mail/mail.service';
-import type { PrismaService } from '../../common/prisma/prisma.service';
-import type { PasswordService } from '../../common/services/password.service';
-import type { SessionService } from '../../common/services/session.service';
-import { hashToken } from '../../common/services/session.service';
+import { AuditService } from '../../common/audit/audit.service';
+import { MailService } from '../../common/mail/mail.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
+import { PasswordService } from '../../common/services/password.service';
+import { SessionService, hashToken } from '../../common/services/session.service';
 import type { Principal } from '../../common/auth/principal';
 import type { RequestMeta } from '../../common/http/request-meta';
 

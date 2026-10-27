@@ -2,8 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import type { Prisma } from '@prisma/client';
 import { TaskStatus } from '@egna-enelaklo/shared';
 import { canTransition, type ActorRole } from '@egna-enelaklo/shared';
-import type { AuditService } from '../../common/audit/audit.service';
-import type { PrismaService } from '../../common/prisma/prisma.service';
+import { AuditService } from '../../common/audit/audit.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
 import type { RequestMeta } from '../../common/http/request-meta';
 
 export interface TransitionActor {

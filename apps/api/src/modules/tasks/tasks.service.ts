@@ -8,10 +8,10 @@ import {
   type TaskPayload,
   type TemplateDefinition,
 } from '@egna-enelaklo/shared';
-import type { PrismaService } from '../../common/prisma/prisma.service';
-import type { AddressesService } from '../addresses/addresses.service';
-import type { ProhibitedService } from './prohibited.service';
-import type { TaskStateMachine } from './task-state-machine.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
+import { AddressesService } from '../addresses/addresses.service';
+import { ProhibitedService } from './prohibited.service';
+import { TaskStateMachine } from './task-state-machine.service';
 
 export type TaskGroup = 'active' | 'completed' | 'waiting';
 

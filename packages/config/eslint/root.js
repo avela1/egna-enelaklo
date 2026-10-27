@@ -12,6 +12,18 @@ import { browserGlobals, reactPlugins, reactRules } from './react-rules.js';
 export default [
   ...base,
   {
+    // NestJS resolves constructor dependencies from the emitted decorator
+    // metadata. `import type` erases that metadata, so this rule — whose
+    // autofix converts imports to type-only — must stay off for the whole API
+    // no matter which config file the ESLint invocation uses. Without this,
+    // every commit rewrote the API's value imports and the API failed to
+    // boot. See apps/api/eslint.config.mjs and CLAUDE.md section 7.
+    files: ['apps/api/**/*.ts'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'off',
+    },
+  },
+  {
     files: ['**/*.js', '**/*.cjs'],
     languageOptions: {
       sourceType: 'commonjs',
