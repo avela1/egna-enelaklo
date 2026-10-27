@@ -79,7 +79,7 @@ export function ForgotPasswordPage() {
                         <FormField
                           htmlFor="forgot-email"
                           label={t('auth.email')}
-                          error={errors.email ? t('validation.email') : undefined}
+                          error={errors.email?.message ? t(errors.email.message) : undefined}
                         >
                           <Input
                             id="forgot-email"

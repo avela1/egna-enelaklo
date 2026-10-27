@@ -79,10 +79,18 @@ describe('the sign in screen', () => {
     mockSession(null);
   });
 
-  it('shows an error when the email address is not valid', async () => {
+  it('asks for the email when it is empty and rejects a malformed one', async () => {
     const user = userEvent.setup();
     renderApp('/sign-in');
 
+    // An empty field is a required error, not an email-format error.
+    await user.click(screen.getByRole('button', { name: /^sign in$/i }));
+    const requiredErrors = await screen.findAllByText('This field is required');
+    expect(requiredErrors.length).toBeGreaterThan(0);
+
+    const email = screen.getByLabelText('Email address');
+    await user.clear(email);
+    await user.type(email, 'not-an-email');
     await user.click(screen.getByRole('button', { name: /^sign in$/i }));
 
     expect(await screen.findByText('Enter a valid email address')).toBeInTheDocument();

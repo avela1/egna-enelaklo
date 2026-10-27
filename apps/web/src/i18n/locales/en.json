@@ -69,7 +69,18 @@
     "verifyFailedTitle": "We could not verify your email",
     "verificationSent": "We sent the confirmation link again.",
     "verifying": "Verifying your email address",
-    "wrongCurrentPassword": "Your current password is not correct"
+    "wrongCurrentPassword": "Your current password is not correct",
+    "signInTitle": "Sign in",
+    "signInSubtitle": "Sign in to your account to continue.",
+    "forgotPassword": "Forgot your password?",
+    "newHere": "New here?",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "prohibitedItems": "Prohibited items",
+    "help": "Help",
+    "errors": {
+      "required": "This field is required"
+    }
   },
   "common": {
     "actions": {
@@ -322,7 +333,8 @@
       "service": "Service",
       "status": "Status",
       "title": "Service catalogue",
-      "version": "Template version"
+      "version": "Template version",
+      "draft": "Draft"
     },
     "queue": {
       "actions": "Actions",
@@ -380,7 +392,8 @@
       "optionsHint": "One option per line, as \"value | label\".",
       "showIf": "Only show when",
       "showIfHint": "The field this one depends on.",
-      "showIfValue": "Equals this value"
+      "showIfValue": "Equals this value",
+      "publishTitle": "Publish this version?"
     }
   },
   "status": {
@@ -519,7 +532,8 @@
       "team": "egna-enelaklo team",
       "timeline": "Progress",
       "title": "Your request",
-      "you": "You"
+      "you": "You",
+      "cancelTitle": "Cancel this task?"
     },
     "form": {
       "addAddress": "Add a new address",
@@ -553,7 +567,9 @@
         "quote": "You receive a quote with the fee.",
         "receipt": "You get the receipt and the delivery confirmation.",
         "review": "We review your request."
-      }
+      },
+      "chooseAddress": "Choose an address",
+      "noRows": "No rows yet. Add the first one."
     },
     "list": {
       "active": "Active",

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { fromSantim, toSantim } from './money';
 
 /** A text in the three languages of the product. Missing languages fall back to English. */
 export interface LocalizedText {
@@ -408,7 +409,7 @@ export function toWirePayload(
     if (value === undefined) continue;
 
     if (field.type === 'money' && typeof value === 'number') {
-      payload[field.key] = Math.round(value * 100);
+      payload[field.key] = toSantim(value);
       continue;
     }
 
@@ -421,7 +422,7 @@ export function toWirePayload(
         for (const subField of field.fields ?? []) {
           const subValue = converted[subField.key];
           if (subField.type === 'money' && typeof subValue === 'number') {
-            converted[subField.key] = Math.round(subValue * 100);
+            converted[subField.key] = toSantim(subValue);
           }
         }
 
@@ -448,7 +449,7 @@ export function fromWirePayload(
     if (value === undefined) continue;
 
     if (field.type === 'money' && typeof value === 'number') {
-      values[field.key] = value / 100;
+      values[field.key] = fromSantim(value);
       continue;
     }
 
@@ -461,7 +462,7 @@ export function fromWirePayload(
         for (const subField of field.fields ?? []) {
           const subValue = converted[subField.key];
           if (subField.type === 'money' && typeof subValue === 'number') {
-            converted[subField.key] = subValue / 100;
+            converted[subField.key] = fromSantim(subValue);
           }
         }
 

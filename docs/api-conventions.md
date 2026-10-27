@@ -114,7 +114,8 @@ Common codes: `BAD_REQUEST`, `VALIDATION_FAILED`, `UNAUTHORIZED`, `FORBIDDEN`, `
   `localStorage`.
 - Mutating requests send a CSRF token header that matches the CSRF cookie.
 - Authorisation is enforced on the server with permission keys, for example
-  `tasks.review`, `tasks.assign`, `payments.reconcile`, `users.manage`, `audit.read`.
+  `tasks.view`, `quotes.edit`, `users.manage`, `audit.view` (the full list lives in
+  `packages/shared/src/permissions.ts`).
 - Roles (customer, tasker, operations, finance, admin) map to permission sets. A role is never
   checked in a controller directly: check the permission key.
 - Every staff or admin write writes an `audit_log` row **in the same database transaction** as

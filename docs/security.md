@@ -3,7 +3,7 @@
 How egna-enelaklo keeps the accounts, the sessions and the audit trail safe. Every rule
 here is implemented in Phase 1 and covered by a test.
 
-1. Accounts
+## 1. Accounts
 
 | Account              | Role       | Lands on  | Password          |
 | -------------------- | ---------- | --------- | ----------------- |
@@ -13,7 +13,7 @@ here is implemented in Phase 1 and covered by a test.
 | `tasker@egna.test`   | TASKER     | `/tasker` | `DevPassword2026` |
 | `customer@egna.test` | CUSTOMER   | `/app`    | `DevPassword2026` |
 
-1. Passwords
+## 2. Passwords
 
 - Passwords are hashed with **argon2id** (m=19 MiB, t=2, p=1) in
   `apps/api/src/common/services/password.service.ts`.
@@ -24,7 +24,7 @@ here is implemented in Phase 1 and covered by a test.
 - The seed password comes from `SEED_PASSWORD` in the environment. The seed refuses to run
   when `NODE_ENV=production`.
 
-## 2. Sessions
+## 3. Sessions
 
 - A session is a random 32 byte token. The **server only stores the SHA-256 hash** of the
   token, in `sessions.token_hash` (a unique index).
@@ -41,7 +41,7 @@ here is implemented in Phase 1 and covered by a test.
   person. Changing the password revokes every other session.
 - Disabling an account revokes all of its sessions.
 
-## 3. CSRF
+## 4. CSRF
 
 - The API uses a **double submit token**: `GET /api/v1/auth/csrf` writes a random token in
   the readable cookie `egna_csrf` and returns it.
@@ -51,7 +51,7 @@ here is implemented in Phase 1 and covered by a test.
   the cookie, so it can not produce a matching header.
 - The web app reads the token from the cookie and never stores it in `localStorage`.
 
-## 4. Rate limiting
+## 5. Rate limiting
 
 `@nestjs/throttler`, per IP, per minute:
 
@@ -62,7 +62,7 @@ here is implemented in Phase 1 and covered by a test.
 
 The limit is read per request, so it can be changed without a restart.
 
-## 5. Account lockout
+## 6. Account lockout
 
 - Five failed sign in attempts lock the account for 15 minutes
   (`LOGIN_MAX_ATTEMPTS`, `LOGIN_LOCK_MINUTES`).
@@ -72,7 +72,7 @@ The limit is read per request, so it can be changed without a restart.
   whether the address exists.
 - A successful sign in resets the counter.
 
-## 6. Authorisation
+## 7. Authorisation
 
 Authorisation is enforced **on the server** with permission keys, never by hiding a menu
 item (`PermissionsGuard`).
@@ -89,7 +89,7 @@ A missing session is a `401`, a missing permission a `403` with the standard env
 The web app hides the navigation items a person may not use, and shows the forbidden
 screen when they open the URL anyway. Both are convenience: the server decides.
 
-## 7. Email tokens
+## 8. Email tokens
 
 - A verification, password reset and invitation token is a random 32 byte value. Only its
   SHA-256 hash is stored (`email_tokens.token_hash`).
@@ -99,7 +99,7 @@ screen when they open the URL anyway. Both are convenience: the server decides.
 - An invited account cannot sign in until the password is set.
 - A password reset revokes every session of that person.
 
-## 8. Audit log
+## 9. Audit log
 
 - Every staff or admin write writes an `audit_log` row **in the same transaction** as the
   change (`AuditService.record(entry, tx)`).
@@ -114,7 +114,7 @@ screen when they open the URL anyway. Both are convenience: the server decides.
   and `DELETE`. Neither the application nor a manual query can rewrite history.
 - The export is recorded as well, so a download of the log is itself visible in the log.
 
-## 9. What the browser stores
+## 10. What the browser stores
 
 | Value               | Where                          |
 | ------------------- | ------------------------------ |
@@ -124,7 +124,7 @@ screen when they open the URL anyway. Both are convenience: the server decides.
 
 There is **no token in `localStorage`** and no token in `sessionStorage`.
 
-## 10. Other measures
+## 11. Other measures
 
 - Helmet sets the usual security headers.
 - CORS only allows the origins in `WEB_ORIGIN`, with credentials.

@@ -62,13 +62,13 @@ Design every phase so the next one slots in without restructuring.
 - `apps/web`: React 18, Vite, React Router, TanStack Query, React Hook Form, Zod, Tailwind CSS
   3.4, Radix UI primitives, react-i18next.
 - `apps/api`: NestJS 10, REST under `/api/v1`, Swagger, Prisma 5 + PostgreSQL 16, pino logging,
-  Helmet, zod for env validation. (Later phases add pg-boss for jobs and argon2 for passwords;
-  do not install them now.)
+  Helmet, zod for env validation, argon2id for password hashing. (Later phases add pg-boss for
+  jobs; do not install it now.)
 - `packages/shared`: Zod schemas, enums, money utils (shared by web and api).
 - Tests: Vitest (web, shared), Jest + Supertest (api). ESLint (flat config) + Prettier,
   Husky + lint-staged. GitHub Actions CI.
-- Local services via Docker Compose: PostgreSQL, MinIO (S3-compatible private file storage),
-  Mailpit.
+- Local services via Docker Compose: PostgreSQL, SeaweedFS (S3-compatible private file
+  storage, see docs/decisions/0005), Mailpit.
 
 ## 5. Folder map
 

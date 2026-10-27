@@ -8,10 +8,10 @@ import {
   type TaskPayload,
   type TemplateDefinition,
 } from '@egna-enelaklo/shared';
-import { PrismaService } from '../../common/prisma/prisma.service';
-import { AddressesService } from '../addresses/addresses.service';
-import { ProhibitedService } from './prohibited.service';
-import { TaskStateMachine } from './task-state-machine.service';
+import type { PrismaService } from '../../common/prisma/prisma.service';
+import type { AddressesService } from '../addresses/addresses.service';
+import type { ProhibitedService } from './prohibited.service';
+import type { TaskStateMachine } from './task-state-machine.service';
 
 export type TaskGroup = 'active' | 'completed' | 'waiting';
 
@@ -183,21 +183,31 @@ export class TasksService {
       __meta: { prohibitedMatches: matches },
     } as unknown as Prisma.InputJsonValue;
 
-    await this.prisma.task.update({
-      where: { id: task.id },
-      data: {
-        payload: payloadWithMeta,
-        budgetCapSantim: mapped.budgetCapSantim ?? null,
-        deadlineAt: mapped.deadlineAt ?? null,
-        pickupAddressId: mapped.pickupAddressId ?? null,
-        deliveryAddressId: mapped.deliveryAddressId ?? null,
-        subCity: deliveryAddress?.subCity ?? pickupAddress?.subCity ?? null,
-      },
-    });
+    // The answers and the status change commit together or not at all.
+    await this.prisma.$transaction(async (tx) => {
+      await tx.task.update({
+        where: { id: task.id },
+        data: {
+          payload: payloadWithMeta,
+          budgetCapSantim: mapped.budgetCapSantim ?? null,
+          deadlineAt: mapped.deadlineAt ?? null,
+          pickupAddressId: mapped.pickupAddressId ?? null,
+          deliveryAddressId: mapped.deliveryAddressId ?? null,
+          subCity: deliveryAddress?.subCity ?? pickupAddress?.subCity ?? null,
+        },
+      });
 
-    await this.stateMachine.transition(task.id, TaskStatus.SUBMITTED, {
-      id: customerId,
-      role: 'customer',
+      await this.stateMachine.transition(
+        task.id,
+        TaskStatus.SUBMITTED,
+        {
+          id: customerId,
+          role: 'customer',
+        },
+        undefined,
+        undefined,
+        tx,
+      );
     });
 
     return { id: task.id, ref: task.ref, status: TaskStatus.SUBMITTED };
@@ -250,6 +260,8 @@ export class TasksService {
         include: {
           service: { select: { key: true, name: true, icon: true } },
           template: { select: { id: true, version: true, definition: true } },
+          // The first attachment, so the list can offer a direct view link.
+          attachments: { select: { id: true }, orderBy: { createdAt: 'asc' }, take: 1 },
           _count: { select: { attachments: true } },
         },
         orderBy: { updatedAt: 'desc' },
@@ -276,6 +288,7 @@ export class TasksService {
           subCity: task.subCity,
           budgetCapSantim: task.budgetCapSantim,
           attachmentCount: task._count.attachments,
+          attachmentId: task.attachments[0]?.id ?? null,
           deadlineAt: task.deadlineAt?.toISOString() ?? null,
           submittedAt: task.submittedAt?.toISOString() ?? null,
           updatedAt: task.updatedAt.toISOString(),

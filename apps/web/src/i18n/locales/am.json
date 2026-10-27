@@ -69,7 +69,18 @@
     "verifyFailedTitle": "ኢሜይልዎን መረጋገጥ አልተቻለም",
     "verificationSent": "የማረጋገጫ አገልግዳውን እንደገና ልከው።",
     "verifying": "የኢሜይል አድራሻዎ በመረጋገጥ ላይ",
-    "wrongCurrentPassword": "የአሁኑ የይለፍ ቃል ትክክል አይደለም"
+    "wrongCurrentPassword": "የአሁኑ የይለፍ ቃል ትክክል አይደለም",
+    "signInTitle": "ግባ",
+    "signInSubtitle": "ለመቀጠል ወደ መለያዎ ይግቡ።",
+    "forgotPassword": "የይለፍ ቃልዎን ረስተዋል?",
+    "newHere": "አዲስ ነዎት?",
+    "terms": "ውሎች",
+    "privacy": "ግላዊነት",
+    "prohibitedItems": "የተከለከሉ እቃዎች",
+    "help": "እገዛ",
+    "errors": {
+      "required": "ይህ መስክ ያስፈልጋል"
+    }
   },
   "common": {
     "actions": {
@@ -322,7 +333,8 @@
       "service": "አገልግዳ",
       "status": "ሁኔታ",
       "title": "የአገልግሎት ካታሎግ",
-      "version": "የቅጽ ዝምን"
+      "version": "የቅጽ ዝምን",
+      "draft": "ረቂቅ"
     },
     "queue": {
       "actions": "እርምጃዎች",
@@ -380,7 +392,8 @@
       "optionsHint": "በእያንድ አንድ አስተማሪያ፣ \"እሴት | ስም\".",
       "showIf": "ብቻ ሲታይ",
       "showIfHint": "ይህ ላይ የሚያመለከት መስክ።",
-      "showIfValue": "ከዚህ ጋር እኩል"
+      "showIfValue": "ከዚህ ጋር እኩል",
+      "publishTitle": "ይህን ስሪት ለማትሔቅ?"
     }
   },
   "status": {
@@ -519,7 +532,8 @@
       "team": "የእኛ እንላከሎ ቡድን",
       "timeline": "እድገት",
       "title": "ጥያቄዎ",
-      "you": "እርስዎ"
+      "you": "እርስዎ",
+      "cancelTitle": "ውልዎን ይሰርዙ?"
     },
     "form": {
       "addAddress": "አድራሻ ጨምር",
@@ -553,7 +567,9 @@
         "quote": "ክፍያ ያለው ዋጋ ያገኛሉ።",
         "receipt": "ደረሰኛና የማዕድ ማረጋገጫ ያገኛሉ።",
         "review": "ጥያቄዎን እንመልከላል።"
-      }
+      },
+      "chooseAddress": "አድራሻ ይምረጡ",
+      "noRows": "እስካሁን ምንም ረድፎች የሉም። የመጀመሪያውን ይጨምሩ።"
     },
     "list": {
       "active": "ንቁ",

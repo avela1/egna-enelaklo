@@ -21,11 +21,10 @@ purpose, and nothing pretends to work: every placeholder says so.
 ### B. Local environment
 
 - `infra/docker-compose.yml`: `postgres:16-alpine` (named volume, healthcheck, database
-  `egna_dev`), `minio` (API 9000, console 9001) with a `minio-init` service that creates the
-  **private** bucket `egna-private` and disables anonymous access, `mailpit` (SMTP 1025, UI
-  8025).
-- MinIO runs behind the `storage` profile (`npm run infra:storage`) so that a registry which
-  cannot reach `minio/minio` does not block PostgreSQL and Mailpit.
+  `egna_dev`), SeaweedFS (S3 API 9000) behind the `storage` profile for the **private** bucket
+  `egna-private` (decision record 0005), `mailpit` (SMTP 1025, UI 8025).
+- The storage image runs behind the `storage` profile (`npm run infra:storage`) so that a
+  registry which cannot reach it does not block PostgreSQL and Mailpit.
 - The PostgreSQL host port is configurable with `POSTGRES_HOST_PORT` in the root `.env`, so the
   stack also runs on a machine that already has PostgreSQL on 5432.
 - `.env.example` at the root, in `apps/api` and in `apps/web`, every variable documented. No
@@ -119,9 +118,11 @@ purpose, and nothing pretends to work: every placeholder says so.
    global validation pipe; NestJS implements that pipe with these two packages. Zod stays the
    validation library for the environment and for `packages/shared`.
 3. **The MinIO image could not be pulled from the machine this was built on** (the registry proxy
-   refuses `minio/minio` and `minio/mc`). The compose file is correct and MinIO was moved
-   behind the `storage` profile so the rest of the stack is unaffected. Mailpit and PostgreSQL
-   were verified running. MinIO is first needed in Phase 4.
+   refuses `minio/minio` and `minio/mc`), so MinIO was moved behind the `storage` profile and the
+   stack was verified without it. On 2026-10-26 this became permanent: SeaweedFS replaced MinIO
+   as the local S3-compatible storage (decision record 0005), because MinIO's community images
+   are no longer pullable at all. Mailpit and PostgreSQL were verified running. Object storage
+   is first needed in Phase 4.
 4. **The build machine already runs a native PostgreSQL on 5432**, which shadows the container
    port. `POSTGRES_HOST_PORT` in the root `.env` solves it; the build machine was verified with
    the container on 5433 and `DATABASE_URL` pointing at 5433.

@@ -139,11 +139,6 @@ export const routes: RouteObject[] = [
         handle: { titleKey: 'pages.customer.newTask' } satisfies RouteHandle,
       },
       {
-        path: 'queue',
-        element: <StaffQueuePage />,
-        handle: { titleKey: 'pages.staff.queue' } satisfies RouteHandle,
-      },
-      {
         path: 'payments',
         element: <CustomerPaymentsPage />,
         handle: { titleKey: 'pages.customer.payments' } satisfies RouteHandle,

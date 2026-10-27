@@ -40,3 +40,9 @@ export const UploadSignSchema = z.object({
   taskId: z.string().uuid().optional(),
 });
 export type UploadSignValues = z.output<typeof UploadSignSchema>;
+
+/** Attach an uploaded file to a task. */
+export const LinkAttachmentSchema = z.object({
+  taskId: z.string().uuid(),
+});
+export type LinkAttachmentValues = z.output<typeof LinkAttachmentSchema>;

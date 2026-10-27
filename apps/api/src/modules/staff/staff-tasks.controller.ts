@@ -1,10 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import type { Prisma } from '@prisma/client';
 import type { TaskStatus } from '@egna-enelaklo/shared';
 import { TaskQuerySchema, type TaskQuery } from '@egna-enelaklo/shared';
 import { RequirePermission } from '../../common/auth/decorators';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import type { PrismaService } from '../../common/prisma/prisma.service';
 
 @ApiTags('staff tasks')
 @Controller('staff/tasks')
@@ -18,20 +19,22 @@ export class StaffTasksController {
   async list(@Query(new ZodValidationPipe(TaskQuerySchema)) query: TaskQuery) {
     const skip = (query.page - 1) * query.pageSize;
 
+    const where: Prisma.TaskWhereInput = {
+      ...(query.group ? { status: { in: groupStatuses(query.group) } } : {}),
+      ...(query.search
+        ? {
+            OR: [
+              { ref: { contains: query.search, mode: 'insensitive' } },
+              { customer: { email: { contains: query.search, mode: 'insensitive' } } },
+              { customer: { name: { contains: query.search, mode: 'insensitive' } } },
+            ],
+          }
+        : {}),
+    };
+
     const [tasks, total] = await this.prisma.$transaction([
       this.prisma.task.findMany({
-        where: {
-          ...(query.group ? { status: { in: groupStatuses(query.group) } } : {}),
-          ...(query.search
-            ? {
-                OR: [
-                  { ref: { contains: query.search, mode: 'insensitive' } },
-                  { customer: { email: { contains: query.search, mode: 'insensitive' } } },
-                  { customer: { name: { contains: query.search, mode: 'insensitive' } } },
-                ],
-              }
-            : {}),
-        },
+        where,
         include: {
           service: { select: { key: true, name: true, icon: true } },
           customer: { select: { id: true, name: true, email: true } },
@@ -40,7 +43,7 @@ export class StaffTasksController {
         skip,
         take: query.pageSize,
       }),
-      this.prisma.task.count(),
+      this.prisma.task.count({ where }),
     ]);
 
     return {

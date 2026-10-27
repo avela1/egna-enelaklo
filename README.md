@@ -1,7 +1,5 @@
 # egna-enelaklo (እኛ እንላከሎ)
 
-- [ ]
-
 A task marketplace for Addis Ababa. Customers delegate real-world errands to company-managed
 taskers. Web first: there is no marketing landing page, the root URL goes straight to sign in.
 
@@ -56,7 +54,7 @@ Then open:
 | http://localhost:5173/ui-kit        | Every UI component in every state |
 | http://localhost:3000/api/v1/health | API health + database check       |
 | http://localhost:3000/api/docs      | Swagger UI                        |
-| http://localhost:9001               | MinIO console (private bucket)    |
+| http://localhost:9000               | SeaweedFS S3 API (private bucket) |
 | http://localhost:8025               | Mailpit (captured emails)         |
 
 ## Signing in
@@ -81,9 +79,10 @@ Mailpit.
 > that port and the two stay in sync. Without this, Prisma connects to the _native_ server and
 > fails with `P1000: Authentication failed`.
 >
-> MinIO runs behind the `storage` profile, so a registry that cannot reach `minio/minio` never
-> blocks the rest of the stack. Start it with `npm run infra:storage` when you need object
-> storage (first needed in Phase 4).
+> SeaweedFS runs behind the `storage` profile, so a registry that cannot reach
+> `chrislusf/seaweedfs` never blocks the rest of the stack. Start it with
+> `npm run infra:storage` when you need object storage (first needed in Phase 4). See
+> [docs/decisions/0005-seaweedfs-replaces-minio.md](docs/decisions/0005-seaweedfs-replaces-minio.md).
 
 ## Root scripts
 
@@ -101,7 +100,7 @@ Mailpit.
 | `npm run infra:down`    | Stops the local services                           |
 | `npm run infra:ps`      | Shows the local services and their ports           |
 | `npm run infra:logs`    | Follows the service logs                           |
-| `npm run infra:storage` | Also starts MinIO (the `storage` profile)          |
+| `npm run infra:storage` | Also starts SeaweedFS (the `storage` profile)      |
 | `npm run db:migrate`    | `prisma migrate dev`                               |
 | `npm run db:deploy`     | `prisma migrate deploy` (CI / production)          |
 | `npm run db:seed`       | `prisma db seed` (empty in Phase 0)                |

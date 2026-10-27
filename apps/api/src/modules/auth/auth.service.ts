@@ -14,11 +14,11 @@ import {
   type ResetPasswordInput,
 } from '@egna-enelaklo/shared';
 import { env } from '../../config/env';
-import { AuditService } from '../../common/audit/audit.service';
-import { MailService } from '../../common/mail/mail.service';
-import { PrismaService } from '../../common/prisma/prisma.service';
-import { PasswordService } from '../../common/services/password.service';
-import { SessionService } from '../../common/services/session.service';
+import type { AuditService } from '../../common/audit/audit.service';
+import type { MailService } from '../../common/mail/mail.service';
+import type { PrismaService } from '../../common/prisma/prisma.service';
+import type { PasswordService } from '../../common/services/password.service';
+import type { SessionService } from '../../common/services/session.service';
 import { hashToken } from '../../common/services/session.service';
 import type { Principal } from '../../common/auth/principal';
 import type { RequestMeta } from '../../common/http/request-meta';
@@ -29,6 +29,13 @@ export const GENERIC_LOGIN_ERROR = 'Invalid email or password';
 /** A hash of a random value, used to keep the timing of a failed sign in even. */
 const DUMMY_HASH =
   '$argon2id$v=19$m=19456,t=2,p=1$J3r1Z1cQb0kQb0kQb0kQb0kQ$0000000000000000000000000000000000000000000';
+
+/** The primary role of a user with its roles loaded, for the audit rows. */
+function primaryRole(user: { roles: { isPrimary: boolean; roleName: string }[] }): string {
+  return (
+    user.roles.find((entry) => entry.isPrimary)?.roleName ?? user.roles[0]?.roleName ?? 'CUSTOMER'
+  );
+}
 
 @Injectable()
 export class AuthService {
@@ -112,7 +119,10 @@ export class AuthService {
     currentSessionId?: string,
   ): Promise<{ user: Awaited<ReturnType<AuthService['publicUser']>>; token: string }> {
     const email = values.email.toLowerCase();
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: { roles: true },
+    });
 
     if (!user) {
       await this.passwords.verify(DUMMY_HASH, values.password);
@@ -136,7 +146,7 @@ export class AuthService {
     if (user.lockedUntil && user.lockedUntil.getTime() > now.getTime()) {
       await this.audit.record({
         actorId: user.id,
-        actorRole: 'CUSTOMER',
+        actorRole: primaryRole(user),
         action: 'auth.locked',
         targetType: 'user',
         targetId: user.id,
@@ -152,7 +162,10 @@ export class AuthService {
     const passwordMatches = await this.passwords.verify(user.passwordHash, values.password);
 
     if (!passwordMatches || user.status !== 'ACTIVE') {
-      const failedLoginCount = user.lockedUntil ? 0 : user.failedLoginCount + 1;
+      // After an expired lock the counter starts a fresh cycle with this
+      // failure, instead of giving one uncounted attempt.
+      const lockExpired = user.lockedUntil !== null;
+      const failedLoginCount = lockExpired ? 1 : user.failedLoginCount + 1;
       const shouldLock = failedLoginCount >= env.LOGIN_MAX_ATTEMPTS;
       const lockedUntil = shouldLock
         ? new Date(now.getTime() + env.LOGIN_LOCK_MINUTES * 60 * 1000)
@@ -165,7 +178,7 @@ export class AuthService {
 
       await this.audit.record({
         actorId: user.id,
-        actorRole: 'CUSTOMER',
+        actorRole: primaryRole(user),
         action: shouldLock ? 'auth.locked' : 'auth.login_failed',
         targetType: 'user',
         targetId: user.id,
@@ -191,7 +204,7 @@ export class AuthService {
 
     await this.audit.record({
       actorId: user.id,
-      actorRole: 'CUSTOMER',
+      actorRole: primaryRole(user),
       action: 'auth.login_success',
       targetType: 'user',
       targetId: user.id,
@@ -258,7 +271,7 @@ export class AuthService {
   async reset(input: ResetPasswordInput, meta: RequestMeta): Promise<void> {
     const token = await this.prisma.emailToken.findUnique({
       where: { tokenHash: hashToken(input.token) },
-      include: { user: true },
+      include: { user: { include: { roles: true } } },
     });
 
     if (!token || token.type !== 'RESET_PASSWORD' || token.usedAt !== null) {
@@ -291,7 +304,7 @@ export class AuthService {
       await this.audit.record(
         {
           actorId: token.userId,
-          actorRole: 'CUSTOMER',
+          actorRole: primaryRole(token.user),
           action: 'auth.password_reset',
           targetType: 'user',
           targetId: token.userId,
@@ -310,7 +323,7 @@ export class AuthService {
   async verifyEmail(tokenInput: string, meta: RequestMeta): Promise<void> {
     const token = await this.prisma.emailToken.findUnique({
       where: { tokenHash: hashToken(tokenInput) },
-      include: { user: true },
+      include: { user: { include: { roles: true } } },
     });
 
     if (!token || token.type !== 'VERIFY_EMAIL' || token.usedAt !== null) {
@@ -338,7 +351,7 @@ export class AuthService {
       await this.audit.record(
         {
           actorId: token.userId,
-          actorRole: 'CUSTOMER',
+          actorRole: primaryRole(token.user),
           action: 'auth.email_verified',
           targetType: 'user',
           targetId: token.userId,
@@ -382,7 +395,7 @@ export class AuthService {
   ): Promise<{ token: string; user: Awaited<ReturnType<AuthService['publicUser']>> }> {
     const token = await this.prisma.emailToken.findUnique({
       where: { tokenHash: hashToken(tokenInput) },
-      include: { user: true },
+      include: { user: { include: { roles: true } } },
     });
 
     if (!token || token.type !== 'INVITE' || token.usedAt !== null) {
@@ -412,7 +425,7 @@ export class AuthService {
       await this.audit.record(
         {
           actorId: token.userId,
-          actorRole: 'CUSTOMER',
+          actorRole: primaryRole(token.user),
           action: 'auth.invite_accepted',
           targetType: 'user',
           targetId: token.userId,

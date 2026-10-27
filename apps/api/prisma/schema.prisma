@@ -287,7 +287,11 @@ model Address {
 /// A task of a customer.
 model Task {
   id                 String     @id @default(uuid()) @db.Uuid
-  ref                String     @default(dbgenerated("('T-' || nextval('task_ref_seq'))")) @db.Text
+  // The expression has to match byte for byte the way PostgreSQL normalises
+  // the default — ('T-'::text || nextval('task_ref_seq'::regclass)), outer
+  // parentheses and casts included. Writing it any other way makes every
+  // `prisma migrate dev` see drift and emit the same ALTER again.
+  ref                String     @default(dbgenerated("('T-'::text || nextval('task_ref_seq'::regclass))")) @db.Text
   customerId         String     @map("customer_id") @db.Uuid
   serviceId          String     @map("service_id") @db.Uuid
   templateId         String     @map("template_id") @db.Uuid

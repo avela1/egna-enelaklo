@@ -88,7 +88,7 @@ export function SignInPage() {
             <FormField
               htmlFor="sign-in-email"
               label={t('auth.email')}
-              error={errors.email ? t('validation.email') : undefined}
+              error={errors.email?.message ? t(errors.email.message) : undefined}
             >
               <Input
                 id="sign-in-email"
@@ -102,7 +102,7 @@ export function SignInPage() {
             <FormField
               htmlFor="sign-in-password"
               label={t('auth.password')}
-              error={errors.password ? t('validation.required') : undefined}
+              error={errors.password?.message ? t(errors.password.message) : undefined}
               hint={
                 <button
                   type="button"

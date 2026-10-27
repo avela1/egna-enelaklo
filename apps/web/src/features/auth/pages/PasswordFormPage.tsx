@@ -123,7 +123,7 @@ export function PasswordFormPage({ mode }: PasswordFormPageProps) {
             <FormField
               htmlFor="new-password"
               label={t('auth.newPassword')}
-              error={errors.password ? t('validation.passwordTooShort') : undefined}
+              error={errors.password?.message ? t(errors.password.message) : undefined}
             >
               <Input
                 id="new-password"

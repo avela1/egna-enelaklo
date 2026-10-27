@@ -28,10 +28,9 @@ export const envSchema = z.object({
 
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
 
-  /** Used in Phase 1 for signed session cookies. Required in production. */
-  SESSION_SECRET: z.string().min(32).optional(),
-  COOKIE_DOMAIN: z.string().optional(),
-
+  // The session cookie is an opaque random token (only its SHA-256 hash is
+  // stored), so no signing secret is needed. Do not add one silently: the
+  // token itself is the credential.
   /** Sliding lifetime of a session, and the hard cap. */
   SESSION_TTL_DAYS: z.coerce.number().int().min(1).max(30).default(7),
   SESSION_ABSOLUTE_TTL_DAYS: z.coerce.number().int().min(1).max(365).default(30),
@@ -68,7 +67,7 @@ export const envSchema = z.object({
   SMTP_FROM: z.string().default('egna-enelaklo <no-reply@egna-enelaklo.local>'),
   SMTP_SECURE: booleanish.default('false'),
 
-  /** Object storage (MinIO locally) — the bucket is PRIVATE. */
+  /** Object storage (SeaweedFS locally) — the bucket is PRIVATE. */
   S3_ENDPOINT: z.string().default('http://localhost:9000'),
   S3_REGION: z.string().default('us-east-1'),
   S3_BUCKET: z.string().default('egna-private'),

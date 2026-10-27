@@ -69,7 +69,18 @@
     "verifyFailedTitle": "Emailii koo qophoofuu hin dandeenne",
     "verificationSent": "Kutaa ragaa irra deebi'i ergame.",
     "verifying": "Emailii koo qophoofaa jira",
-    "wrongCurrentPassword": "Eegumsaa yeroo ammaa dogoggora"
+    "wrongCurrentPassword": "Eegumsaa yeroo ammaa dogoggora",
+    "signInTitle": "Seensi",
+    "signInSubtitle": "Itti fufuuf herrega keetti seeni.",
+    "forgotPassword": "Jecha icciitii ni dagadduu?",
+    "newHere": "Haaraadhaa?",
+    "terms": "Haala",
+    "privacy": "Iccitii",
+    "prohibitedItems": "Meeyaalee dhorkaman",
+    "help": "Gargaarsa",
+    "errors": {
+      "required": "Bakki kun barbaachisaadha"
+    }
   },
   "common": {
     "actions": {
@@ -322,7 +333,8 @@
       "service": "Tajaajilaa",
       "status": "Haala",
       "title": "Galmee tajaajilaa",
-      "version": "Warsiin barreeffamaa"
+      "version": "Warsiin barreeffamaa",
+      "draft": "Wixinee"
     },
     "queue": {
       "actions": "Hoji",
@@ -380,7 +392,8 @@
       "optionsHint": "Filannoo tokko tarree, \"value | label\".",
       "showIf": "Yoo dhaqaa qofa",
       "showIfHint": "Kanneen itti fufu barreeffamaa.",
-      "showIfValue": "Kanaan dhaqaa qofa"
+      "showIfValue": "Kanaan dhaqaa qofa",
+      "publishTitle": "Guutuu kana maxxanfuu?"
     }
   },
   "status": {
@@ -519,7 +532,8 @@
       "team": "Kooti egna-enelaklo",
       "timeline": "Tajaajila",
       "title": "Wajjiraa kooti",
-      "you": "Ati"
+      "you": "Ati",
+      "cancelTitle": "Hojii kana haakuu?"
     },
     "form": {
       "addAddress": "Teessoo haaraa dabali",
@@ -546,7 +560,6 @@
       "replaceFile": "Faayilii bira filadhu",
       "uploaded": "Faayiliin olkaa'ameera",
       "uploadFailed": "Faayilii olkaa'uu hin dandeenne",
-      "fileTooLarge": "Faayiliin {{mb}} MB caala",
       "uploading": "Olkaa'aa jira...",
       "whatNext": "Biyyaa booda maaltu",
       "steps": {
@@ -554,7 +567,9 @@
         "quote": "Kaffaltii qabu qabeenyii argata.",
         "receipt": "Ragaa dhugaa fi galmee galmee argata.",
         "review": "Wajjiraa kee qaqqabanna."
-      }
+      },
+      "chooseAddress": "Teessoo filadhu",
+      "noRows": "Hanga ammaa tarreewwan hin jiru. Isa jalqabaa dabalii."
     },
     "list": {
       "active": "Hoji",

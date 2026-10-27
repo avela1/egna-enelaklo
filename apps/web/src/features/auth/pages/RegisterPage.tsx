@@ -88,7 +88,7 @@ export function RegisterPage() {
             <FormField
               htmlFor="register-name"
               label={t('auth.fullName')}
-              error={errors.name ? t('validation.nameTooShort') : undefined}
+              error={errors.name?.message ? t(errors.name.message) : undefined}
             >
               <Input id="register-name" type="text" autoComplete="name" {...register('name')} />
             </FormField>
@@ -97,7 +97,7 @@ export function RegisterPage() {
               htmlFor="register-phone"
               label={t('auth.phone')}
               hint={t('auth.phoneHint')}
-              error={errors.phone ? t('validation.phoneInvalid') : undefined}
+              error={errors.phone?.message ? t(errors.phone.message) : undefined}
             >
               <div className="flex items-center gap-2">
                 <span className="flex h-input items-center rounded-control border border-line bg-canvas px-3 text-[15px] text-ink-700">
@@ -117,7 +117,7 @@ export function RegisterPage() {
             <FormField
               htmlFor="register-email"
               label={t('auth.email')}
-              error={errors.email ? t('validation.email') : undefined}
+              error={errors.email?.message ? t(errors.email.message) : undefined}
             >
               <Input id="register-email" type="email" autoComplete="email" {...register('email')} />
             </FormField>
@@ -125,7 +125,7 @@ export function RegisterPage() {
             <FormField
               htmlFor="register-password"
               label={t('auth.password')}
-              error={errors.password ? t('validation.passwordTooShort') : undefined}
+              error={errors.password?.message ? t(errors.password.message) : undefined}
             >
               <Input
                 id="register-password"

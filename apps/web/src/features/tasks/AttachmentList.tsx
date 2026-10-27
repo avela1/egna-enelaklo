@@ -28,6 +28,33 @@ export function openAttachmentInNewTab(url: string): void {
 }
 
 /**
+ * Asks for the signed URL of an attachment and opens it in a new tab.
+ *
+ * The tab is opened synchronously, before the request, so browsers do not
+ * block it as a popup. Returns false when the file could not be opened, so
+ * the caller can show its own error.
+ */
+export async function openAttachment(attachmentId: string): Promise<boolean> {
+  // The tab has to be opened inside the click handler, before the await.
+  const tab = window.open('about:blank');
+
+  try {
+    const read = await attachmentUrl(attachmentId);
+
+    if (tab) {
+      tab.location.href = read.url;
+      return true;
+    }
+
+    return false;
+  } catch {
+    tab?.close();
+
+    return false;
+  }
+}
+
+/**
  * Lists the attachments of a task with a view button for each.
  *
  * The files live in a private bucket: viewing asks the API for a short
@@ -44,21 +71,8 @@ export function AttachmentList({
   const [errorId, setErrorId] = useState<string | null>(null);
 
   const open = async (id: string) => {
-    // The tab is opened synchronously (inside the click handler) so browsers
-    // do not block it as a popup, and it is navigated once the signed URL
-    // arrives. Without the storage to read from, the tab is closed again.
-    const tab = window.open('about:blank');
-    try {
-      const read = await attachmentUrl(id);
-      if (tab) {
-        tab.location.href = read.url;
-      } else {
-        setErrorId(id);
-      }
-    } catch {
-      tab?.close();
-      setErrorId(id);
-    }
+    const ok = await openAttachment(id);
+    if (!ok) setErrorId(id);
   };
 
   return (

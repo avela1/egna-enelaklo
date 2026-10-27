@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import type { Prisma } from '@prisma/client';
 import { TaskStatus } from '@egna-enelaklo/shared';
 import { canTransition, type ActorRole } from '@egna-enelaklo/shared';
-import { AuditService } from '../../common/audit/audit.service';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import type { AuditService } from '../../common/audit/audit.service';
+import type { PrismaService } from '../../common/prisma/prisma.service';
 import type { RequestMeta } from '../../common/http/request-meta';
 
 export interface TransitionActor {
@@ -33,64 +34,78 @@ export class TaskStateMachine {
     actor: TransitionActor,
     note?: string,
     meta?: RequestMeta,
+    /** Pass the surrounding transaction so the transition joins it. */
+    tx?: Prisma.TransactionClient,
   ) {
-    return this.prisma.$transaction(async (tx) => {
-      // The row lock makes two parallel transitions impossible.
-      await tx.$queryRaw`SELECT id FROM tasks WHERE id = ${taskId}::uuid FOR UPDATE`;
+    const run = (client: Prisma.TransactionClient) =>
+      this.transitionIn(client, taskId, to, actor, note, meta);
 
-      const task = await tx.task.findUnique({ where: { id: taskId } });
+    return tx ? run(tx) : this.prisma.$transaction(run);
+  }
 
-      if (!task) {
-        throw new NotFoundException({ code: 'NOT_FOUND', message: 'Task not found' });
-      }
+  private async transitionIn(
+    tx: Prisma.TransactionClient,
+    taskId: string,
+    to: TaskStatus,
+    actor: TransitionActor,
+    note?: string,
+    meta?: RequestMeta,
+  ) {
+    // The row lock makes two parallel transitions impossible.
+    await tx.$queryRaw`SELECT id FROM tasks WHERE id = ${taskId}::uuid FOR UPDATE`;
 
-      if (!canTransition(task.status, to, actor.role)) {
-        throw new BadRequestException({
-          code: 'INVALID_TRANSITION',
-          message: `A task cannot go from ${task.status} to ${to} for a ${actor.role}`,
-          details: { from: task.status, to, actor: actor.role },
-        });
-      }
+    const task = await tx.task.findUnique({ where: { id: taskId } });
 
-      const updated = await tx.task.update({
-        where: { id: taskId },
-        data: {
-          status: to,
-          ...(to === TaskStatus.SUBMITTED ? { submittedAt: new Date() } : {}),
-          ...(to === TaskStatus.CANCELLED ? { cancelledAt: new Date() } : {}),
-        },
+    if (!task) {
+      throw new NotFoundException({ code: 'NOT_FOUND', message: 'Task not found' });
+    }
+
+    if (!canTransition(task.status, to, actor.role)) {
+      throw new BadRequestException({
+        code: 'INVALID_TRANSITION',
+        message: `A task cannot go from ${task.status} to ${to} for a ${actor.role}`,
+        details: { from: task.status, to, actor: actor.role },
       });
+    }
 
-      await tx.taskStatusHistory.create({
-        data: {
-          taskId,
-          fromStatus: task.status,
-          toStatus: to,
+    const updated = await tx.task.update({
+      where: { id: taskId },
+      data: {
+        status: to,
+        ...(to === TaskStatus.SUBMITTED ? { submittedAt: new Date() } : {}),
+        ...(to === TaskStatus.CANCELLED ? { cancelledAt: new Date() } : {}),
+      },
+    });
+
+    await tx.taskStatusHistory.create({
+      data: {
+        taskId,
+        fromStatus: task.status,
+        toStatus: to,
+        actorId: actor.id ?? null,
+        actorRole: actor.role,
+        note: note ?? null,
+      },
+    });
+
+    if (STAFF_ROLES.includes(actor.role)) {
+      await this.audit.record(
+        {
           actorId: actor.id ?? null,
           actorRole: actor.role,
-          note: note ?? null,
+          action: 'task.status_changed',
+          targetType: 'task',
+          targetId: taskId,
+          before: { status: task.status },
+          after: { status: to, ...(note ? { note } : {}) },
+          ip: meta?.ip,
+          userAgent: meta?.userAgent,
+          requestId: meta?.requestId,
         },
-      });
+        tx,
+      );
+    }
 
-      if (STAFF_ROLES.includes(actor.role)) {
-        await this.audit.record(
-          {
-            actorId: actor.id ?? null,
-            actorRole: actor.role,
-            action: 'task.status_changed',
-            targetType: 'task',
-            targetId: taskId,
-            before: { status: task.status },
-            after: { status: to, ...(note ? { note } : {}) },
-            ip: meta?.ip,
-            userAgent: meta?.userAgent,
-            requestId: meta?.requestId,
-          },
-          tx,
-        );
-      }
-
-      return updated;
-    });
+    return updated;
   }
 }
